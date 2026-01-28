@@ -390,22 +390,36 @@ Note: The first chapter does not trigger a page break.
 // ============================================================================
 = Built-in Presets
 
-beautitled includes several presets for common configurations:
+beautitled includes several presets for common configurations. Presets are called *before* `beautitled-init`:
+
+== Complete Example
+
+```typst
+#import "@preview/beautitled:0.1.0": *
+
+// 1. Choose a style
+#beautitled-setup(style: "scholarly")
+
+// 2. Apply language preset
+#preset-english()
+
+// 3. Apply color theme
+#theme-ocean()
+
+// 4. Initialize
+#show: beautitled-init
+
+= My Chapter
+== My Section
+```
 
 == Language Presets
 
 ```typst
-// French (default)
-#preset-french()
-
-// English
-#preset-english()
-
-// German
-#preset-german()
-
-// No numbering
-#preset-no-numbers()
+#preset-french()      // "Chapitre", "Section"
+#preset-english()     // "Chapter", "Section"
+#preset-german()      // "Kapitel", "Abschnitt"
+#preset-no-numbers()  // Hide all numbering
 ```
 
 == Color Themes
