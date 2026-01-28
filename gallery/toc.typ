@@ -38,8 +38,8 @@
       #text(size: 10pt, fill: primary)[#text(fill: accent)[▸] 1.1 Context #box(width: 1fr, fill) 1]
     ]
   } else if style-name == "elegant" {
-    align(center)[
-      #text(size: 11pt, weight: "bold", fill: primary, tracking: 0.05em)[#smallcaps[Chapter 1 : Introduction] #h(1em) 1]
+    block[
+      #text(size: 11pt, weight: "bold", fill: primary, tracking: 0.05em)[#smallcaps[Chapter 1 : Introduction] #box(width: 1fr, repeat[#h(0.3em)·]) 1]
     ]
     block(inset: (left: indent))[
       #text(size: 10pt, fill: primary, style: "italic")[1.1 Context #box(width: 1fr, repeat[#h(0.3em)·]) 1]
@@ -59,10 +59,8 @@
       #text(size: 10pt, fill: primary)[1.1 Context #h(1fr) 1]
     ]
   } else if style-name == "scholarly" {
-    align(center)[
-      #line(length: 20%, stroke: 0.4pt + secondary)
-      #text(size: 11pt, weight: "bold", fill: primary)[Chapter 1 : Introduction #h(1em) 1]
-      #line(length: 20%, stroke: 0.4pt + secondary)
+    block[
+      #text(size: 11pt, weight: "bold", fill: primary)[Chapter 1 : Introduction #box(width: 1fr, fill) 1]
     ]
     block(inset: (left: indent))[
       #text(size: 10pt, fill: primary)[1.1 Context #box(width: 1fr, fill) 1]

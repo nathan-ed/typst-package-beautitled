@@ -510,12 +510,10 @@
     (
       chapter: it => {
         block(above: 0.5em)[
-          #align(center)[
-            #text(size: cfg.toc-chapter-size, weight: "bold", fill: primary, tracking: 0.05em)[
-              #link(it.element.location())[#smallcaps[#it.element.body]]
-              #h(1em)
-              #it.page()
-            ]
+          #text(size: cfg.toc-chapter-size, weight: "bold", fill: primary, tracking: 0.05em)[
+            #link(it.element.location())[#smallcaps[#it.element.body]]
+            #box(width: 1fr, repeat[#h(0.3em)·])
+            #it.page()
           ]
         ]
       },
@@ -618,12 +616,10 @@
     (
       chapter: it => {
         block(above: 0.6em, below: 0.3em)[
-          #align(center)[
-            #line(length: 20%, stroke: 0.4pt + secondary)
-            #text(size: cfg.toc-chapter-size, weight: "bold", fill: primary)[
-              #link(it.element.location())[#it.element.body] #h(1em) #it.page()
-            ]
-            #line(length: 20%, stroke: 0.4pt + secondary)
+          #text(size: cfg.toc-chapter-size, weight: "bold", fill: primary)[
+            #link(it.element.location())[#it.element.body]
+            #box(width: 1fr, cfg.toc-fill)
+            #it.page()
           ]
         ]
       },
