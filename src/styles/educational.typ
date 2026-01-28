@@ -9,7 +9,7 @@
     let primary = cfg.primary-color
     let accent = cfg.accent-color
 
-    block(width: 100%, stroke: (left: 3pt + accent), inset: (left: 1em, y: 0.3em))[
+    block(width: 100%, above: 0pt, below: 0pt, stroke: (left: 3pt + accent), inset: (left: 1em, y: 0.3em))[
       #if show-num [
         #text(size: 36pt, weight: "bold", fill: accent)[#num]
         #v(-0.3em)
@@ -22,7 +22,7 @@
     let primary = cfg.primary-color
     let accent = cfg.accent-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #text(size: cfg.section-size, weight: "bold", fill: primary)[
         #if show-num [#text(fill: accent)[#ch-num.#sec-num]#h(0.6em)]
         #title

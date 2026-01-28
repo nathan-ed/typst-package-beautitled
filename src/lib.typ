@@ -118,13 +118,13 @@
   chapter-prefix: "Chapitre",
   section-prefix: "Section",
 
-  // Spacing (compact for educational documents)
-  chapter-above: 1.2em,
-  chapter-below: 0.5em,
-  section-above: 0.5em,
-  section-below: 0.4em,
-  subsection-above: 0.5em,
-  subsection-below: 0.3em,
+  // Spacing
+  chapter-above: 1.5em,
+  chapter-below: 0.8em,
+  section-above: 1em,
+  section-below: 0.5em,
+  subsection-above: 0.8em,
+  subsection-below: 0.4em,
 
   // Page breaks
   chapter-pagebreak: false,  // Automatic page break before chapters
@@ -214,13 +214,16 @@
 }
 
 // ============================================================================
-// Counters
+// Counters and State
 // ============================================================================
 
 #let chapter-counter = counter("beautitled-chapter")
 #let section-counter = counter("beautitled-section")
 #let subsection-counter = counter("beautitled-subsection")
 #let subsubsection-counter = counter("beautitled-subsubsection")
+
+// State to prevent show rule recursion
+#let _beautitled-internal = state("beautitled-internal", false)
 
 /// Reset all counters to 0
 #let reset-counters() = {
@@ -265,18 +268,18 @@
 
     v(cfg.chapter-above)
 
-    // Create outline entry for TOC/bookmarks (only when not called from beautitled-init)
-    if not _from-init {
-      let outline-title = if show-num {
-        [#cfg.chapter-prefix #num : #title]
-      } else {
-        title
-      }
-      // Use place to register heading for outline without affecting layout
-      place(hide[#heading(level: 1, outlined: true, bookmarked: true, outline-title) #label])
+    // Create outline entry for TOC/bookmarks
+    let outline-title = if show-num {
+      [#cfg.chapter-prefix #num : #title]
+    } else {
+      title
     }
 
     (style.chapter)(title, num, cfg, show-num)
+
+    // Register heading for outline without affecting layout (placed after content)
+    // The label marks this as internal to prevent show rule recursion
+    place(hide[#heading(level: 1, outlined: true, bookmarked: true, outline-title) <_btl-internal> #label])
     v(cfg.chapter-below)
   }
 }
@@ -299,21 +302,19 @@
 
     v(cfg.section-above)
 
-    // Create outline entry for TOC/bookmarks (only when not called from beautitled-init)
-    if not _from-init {
-      let outline-title = if show-num {
-        if ch-num > 0 {
-          [#ch-num.#sec-num #title]
-        } else {
-          [#sec-num. #title]
-        }
+    // Create outline entry for TOC/bookmarks
+    let outline-title = if show-num {
+      if ch-num > 0 {
+        [#ch-num.#sec-num #title]
       } else {
-        title
+        [#sec-num. #title]
       }
-      place(hide[#heading(level: 2, outlined: true, bookmarked: true, outline-title) #label])
+    } else {
+      title
     }
 
     (style.section)(title, ch-num, sec-num, cfg, show-num)
+    place(hide[#heading(level: 2, outlined: true, bookmarked: true, outline-title) <_btl-internal> #label])
     v(cfg.section-below)
   }
 }
@@ -336,17 +337,15 @@
 
     v(cfg.subsection-above)
 
-    // Create outline entry for TOC/bookmarks (only when not called from beautitled-init)
-    if not _from-init {
-      let outline-title = if show-num {
-        [#sec-num.#subsec-num #title]
-      } else {
-        title
-      }
-      place(hide[#heading(level: 3, outlined: cfg.toc-show-subsections, bookmarked: true, outline-title) #label])
+    // Create outline entry for TOC/bookmarks
+    let outline-title = if show-num {
+      [#sec-num.#subsec-num #title]
+    } else {
+      title
     }
 
     (style.subsection)(title, ch-num, sec-num, subsec-num, cfg, show-num)
+    place(hide[#heading(level: 3, outlined: cfg.toc-show-subsections, bookmarked: true, outline-title) <_btl-internal> #label])
     v(cfg.subsection-below)
   }
 }
@@ -366,16 +365,13 @@
     let subsubsec-num = subsubsection-counter.get().first()
     let show-num = if numbered == auto { cfg.show-subsection-number } else { numbered }
 
-    v(0.5em)
+    v(cfg.subsection-above)
 
-    // Create outline entry for bookmarks (only when not called from beautitled-init)
-    if not _from-init {
-      let outline-title = if show-num {
-        [#sec-num.#subsec-num.#subsubsec-num #title]
-      } else {
-        title
-      }
-      place(hide[#heading(level: 4, outlined: false, bookmarked: true, outline-title) #label])
+    // Create outline entry for bookmarks
+    let outline-title = if show-num {
+      [#sec-num.#subsec-num.#subsubsec-num #title]
+    } else {
+      title
     }
 
     if "subsubsection" in style {
@@ -386,7 +382,8 @@
         #title
       ]
     }
-    v(0.3em)
+    place(hide[#heading(level: 4, outlined: false, bookmarked: true, outline-title) <_btl-internal> #label])
+    v(cfg.subsection-below)
   }
 }
 
@@ -650,6 +647,41 @@
       },
     )
   },
+
+  // Simple style - clean flat list with dots
+  simple: (cfg) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+    (
+      chapter: it => {
+        block(above: 0.4em)[
+          #text(size: cfg.toc-chapter-size, fill: primary)[
+            #link(it.element.location())[#it.element.body]
+            #box(width: 1fr, cfg.toc-fill)
+            #it.page()
+          ]
+        ]
+      },
+      section: it => {
+        block(above: 0.4em)[
+          #text(size: cfg.toc-section-size, fill: primary)[
+            #link(it.element.location())[#it.element.body]
+            #box(width: 1fr, cfg.toc-fill)
+            #it.page()
+          ]
+        ]
+      },
+      subsection: it => {
+        block(above: 0.3em, inset: (left: cfg.toc-indent))[
+          #text(size: cfg.toc-subsection-size, fill: secondary)[
+            #link(it.element.location())[#it.element.body]
+            #box(width: 1fr, cfg.toc-fill)
+            #it.page()
+          ]
+        ]
+      },
+    )
+  },
 )
 
 // Get TOC style renderer, fallback to titled style
@@ -666,6 +698,7 @@
   title: "Table des matières",
   depth: 3,
   style: none,  // Override style for TOC only
+  title-align: center,  // Title alignment: center, left, right
 ) = context {
   let cfg = beautitled-config.get()
   let toc-style-name = if style != none { style } else if cfg.toc-style != none { cfg.toc-style } else { cfg.style }
@@ -676,7 +709,7 @@
 
   // Title (only if provided)
   if title != none {
-    align(center)[
+    align(title-align)[
       #text(size: cfg.chapter-size, weight: "bold", fill: primary)[#title]
     ]
     v(1em)
@@ -700,11 +733,25 @@
 
 #let beautitled-init(doc) = {
   // Transform native Typst headings to beautitled styled versions
-  // The original heading is kept (but hidden) for outline/bookmark support
-  show heading.where(level: 1): it => [#hide(it)#chapter(it.body, _from-init: true)]
-  show heading.where(level: 2): it => [#hide(it)#section(it.body, _from-init: true)]
-  show heading.where(level: 3): it => [#hide(it)#subsection(it.body, _from-init: true)]
-  show heading.where(level: 4): it => [#hide(it)#subsubsection(it.body, _from-init: true)]
+  // Skip headings that have the internal label (outline entries created by beautitled)
+  show heading.where(level: 1): it => {
+    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    else { chapter(it.body, _from-init: true) }
+  }
+  show heading.where(level: 2): it => {
+    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    else { section(it.body, _from-init: true) }
+  }
+  show heading.where(level: 3): it => {
+    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    else { subsection(it.body, _from-init: true) }
+  }
+  show heading.where(level: 4): it => {
+    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    else { subsubsection(it.body, _from-init: true) }
+  }
+  // Suppress original headings from outline (beautitled creates its own entries)
+  set heading(outlined: false, bookmarked: false)
   doc
 }
 

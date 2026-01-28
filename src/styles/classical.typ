@@ -9,15 +9,15 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    v(0.5em)
-    align(center)[
-      #if show-num [
-        #text(size: 12pt, fill: secondary)[#cfg.chapter-prefix #num]
-        #v(0.5em)
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #if show-num [
+          #text(size: 12pt, fill: secondary)[#cfg.chapter-prefix #num]
+          #v(0.5em)
+        ]
+        #text(size: cfg.chapter-size, weight: "bold", fill: primary, tracking: 0.03em)[#smallcaps[#title]]
       ]
-      #text(size: cfg.chapter-size, weight: "bold", fill: primary, tracking: 0.03em)[#smallcaps[#title]]
     ]
-    v(0.3em)
   },
 
   section: (title, ch-num, sec-num, cfg, show-num) => {

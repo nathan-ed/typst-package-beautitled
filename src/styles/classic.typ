@@ -9,14 +9,16 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    align(center)[
-      #if show-num [
-        #text(size: 11pt, fill: secondary, tracking: 0.15em)[#upper(cfg.chapter-prefix) #numbering("I", num)]
-        #v(0.3em)
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #if show-num [
+          #text(size: 11pt, fill: secondary, tracking: 0.15em)[#upper(cfg.chapter-prefix) #numbering("I", num)]
+          #v(0.3em)
+        ]
+        #text(size: cfg.chapter-size, weight: "bold", fill: primary)[#title]
+        #v(0.2em)
+        #line(length: 40%, stroke: 0.5pt + secondary)
       ]
-      #text(size: cfg.chapter-size, weight: "bold", fill: primary)[#title]
-      #v(0.2em)
-      #line(length: 40%, stroke: 0.5pt + secondary)
     ]
   },
 
@@ -24,7 +26,7 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #text(size: cfg.section-size, weight: "bold", fill: primary)[
         #if show-num [#sec-num.#h(0.5em)]
         #title

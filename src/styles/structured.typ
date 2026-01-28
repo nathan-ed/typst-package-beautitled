@@ -9,7 +9,7 @@
     let primary = cfg.primary-color
     let accent = cfg.accent-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #grid(
         columns: (auto, 1fr),
         gutter: 0.8em,

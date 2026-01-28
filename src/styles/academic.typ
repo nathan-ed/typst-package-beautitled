@@ -9,7 +9,7 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #if show-num [
         #text(size: 11pt, fill: secondary, weight: "medium")[#cfg.chapter-prefix #num]
         #v(0.3em)

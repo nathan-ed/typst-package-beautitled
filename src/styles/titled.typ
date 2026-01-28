@@ -17,10 +17,12 @@
       titled-chapter-info.update((num: none, title: title))
     }
 
-    align(center)[
-      #text(size: cfg.chapter-size, weight: "bold", fill: primary)[
-        #if show-num [#cfg.chapter-prefix #num : ]
-        #title
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #text(size: cfg.chapter-size, weight: "bold", fill: primary)[
+          #if show-num [#cfg.chapter-prefix #num : ]
+          #title
+        ]
       ]
     ]
   },
@@ -38,7 +40,7 @@
       #if show-num [#text(tracking: 0.1em)[#upper(cfg.section-prefix) #sec-num]]
     ]
 
-    block(width: 100%, stroke: 0.8pt + primary, inset: (x: 1em, y: 0.8em))[
+    block(width: 100%, above: 0pt, below: 0pt, stroke: 0.8pt + primary, inset: (x: 1em, y: 0.8em))[
       #place(top + left, dy: -1em - 2.5pt, dx: 0pt)[
         #box(fill: white, inset: (x: 2pt, y: 2pt))[#label-text]
       ]

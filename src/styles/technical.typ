@@ -9,7 +9,7 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    block(width: 100%, stroke: (left: 1.5pt + primary, bottom: 0.5pt + secondary), inset: (left: 1em, bottom: 0.5em, y: 0.5em))[
+    block(width: 100%, above: 0pt, below: 0pt, stroke: (left: 1.5pt + primary, bottom: 0.5pt + secondary), inset: (left: 1em, bottom: 0.5em, y: 0.5em))[
       #if show-num [
         #text(size: 9pt, fill: secondary, tracking: 0.1em)[#upper(cfg.chapter-prefix)]
         #h(0.3em)

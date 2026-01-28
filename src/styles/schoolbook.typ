@@ -9,7 +9,7 @@
     let primary = cfg.primary-color
     let accent = cfg.accent-color
 
-    block(width: 100%, stroke: (bottom: 1.5pt + accent), inset: (bottom: 0.5em))[
+    block(width: 100%, above: 0pt, below: 0pt, stroke: (bottom: 1.5pt + accent), inset: (bottom: 0.5em))[
       #if show-num [
         #text(size: 12pt, fill: accent, weight: "bold")[#cfg.chapter-prefix #num]
         #h(0.5em)
@@ -24,7 +24,7 @@
     let primary = cfg.primary-color
     let accent = cfg.accent-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #grid(
         columns: (auto, 1fr),
         gutter: 0.5em,

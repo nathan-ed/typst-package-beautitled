@@ -9,7 +9,7 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #if show-num [
         #text(size: 10pt, fill: secondary)[#cfg.chapter-prefix #num]
         #h(0.3em)
@@ -24,7 +24,7 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #text(size: cfg.section-size, weight: "bold", fill: primary)[
         #if show-num [#text(fill: secondary)[#sec-num.]#h(0.4em)]
         #title

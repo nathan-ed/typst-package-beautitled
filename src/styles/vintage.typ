@@ -9,20 +9,22 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    align(center)[
-      #text(size: 8pt, fill: secondary)[✦ ✦ ✦]
-      #v(0.4em)
-      #if show-num [
-        #text(size: 10pt, style: "italic", fill: secondary)[#cfg.chapter-prefix]
-        #v(0.2em)
-        #text(size: 32pt, fill: secondary.lighten(30%))[#numbering("I", num)]
-        #v(0.3em)
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #text(size: 8pt, fill: secondary)[✦ ✦ ✦]
+        #v(0.4em)
+        #if show-num [
+          #text(size: 10pt, style: "italic", fill: secondary)[#cfg.chapter-prefix]
+          #v(0.2em)
+          #text(size: 32pt, fill: secondary.lighten(30%))[#numbering("I", num)]
+          #v(0.3em)
+        ]
+        #line(length: 6em, stroke: 0.4pt + secondary)
+        #v(0.4em)
+        #text(size: cfg.chapter-size, style: "italic", fill: primary)[#title]
+        #v(0.4em)
+        #text(size: 10pt, fill: secondary)[— ❦ —]
       ]
-      #line(length: 6em, stroke: 0.4pt + secondary)
-      #v(0.4em)
-      #text(size: cfg.chapter-size, style: "italic", fill: primary)[#title]
-      #v(0.4em)
-      #text(size: 10pt, fill: secondary)[— ❦ —]
     ]
   },
 
@@ -30,16 +32,18 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    align(center)[
-      #text(size: 8pt, fill: secondary)[§]
-      #h(0.2em)
-      #if show-num [
-        #text(size: 10pt, fill: secondary)[#numbering("I", sec-num).]
-        #h(0.3em)
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #text(size: 8pt, fill: secondary)[§]
+        #h(0.2em)
+        #if show-num [
+          #text(size: 10pt, fill: secondary)[#numbering("I", sec-num).]
+          #h(0.3em)
+        ]
+        #text(size: cfg.section-size, style: "italic", fill: primary)[#title]
+        #h(0.2em)
+        #text(size: 8pt, fill: secondary)[§]
       ]
-      #text(size: cfg.section-size, style: "italic", fill: primary)[#title]
-      #h(0.2em)
-      #text(size: 8pt, fill: secondary)[§]
     ]
   },
 

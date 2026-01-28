@@ -10,7 +10,7 @@
     let accent = cfg.accent-color
     let secondary = cfg.secondary-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #if show-num [
         #text(size: 72pt, weight: "bold", fill: secondary.lighten(60%))[#numbering("01", num)]
         #v(-2.5em)
@@ -28,7 +28,7 @@
     let accent = cfg.accent-color
     let secondary = cfg.secondary-color
 
-    block(width: 100%)[
+    block(width: 100%, above: 0pt, below: 0pt)[
       #if show-num [
         #text(size: 9pt, fill: accent, weight: "bold", tracking: 0.1em)[#upper(cfg.section-prefix) #sec-num]
         #v(0.1em)

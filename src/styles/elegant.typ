@@ -9,18 +9,20 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    align(center)[
-      #text(size: 8pt, fill: secondary)[— ✦ —]
-      #v(0.5em)
-      #if show-num [
-        #text(size: 10pt, fill: secondary, tracking: 0.2em)[#smallcaps[#cfg.chapter-prefix]]
-        #h(0.3em)
-        #text(size: 28pt, fill: secondary.lighten(30%))[#numbering("I", num)]
-        #v(0.3em)
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #text(size: 8pt, fill: secondary)[— ✦ —]
+        #v(0.5em)
+        #if show-num [
+          #text(size: 10pt, fill: secondary, tracking: 0.2em)[#smallcaps[#cfg.chapter-prefix]]
+          #h(0.3em)
+          #text(size: 28pt, fill: secondary.lighten(30%))[#numbering("I", num)]
+          #v(0.3em)
+        ]
+        #text(size: cfg.chapter-size, fill: primary, tracking: 0.05em)[#smallcaps[#title]]
+        #v(0.5em)
+        #text(size: 8pt, fill: secondary)[— ✦ —]
       ]
-      #text(size: cfg.chapter-size, fill: primary, tracking: 0.05em)[#smallcaps[#title]]
-      #v(0.5em)
-      #text(size: 8pt, fill: secondary)[— ✦ —]
     ]
   },
 
@@ -28,15 +30,17 @@
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
-    align(center)[
-      #line(length: 2em, stroke: 0.4pt + secondary)
-      #h(0.8em)
-      #text(size: cfg.section-size, fill: primary, tracking: 0.1em)[
-        #if show-num [#text(fill: secondary)[#numbering("i", sec-num).] #h(0.3em)]
-        #smallcaps[#title]
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #line(length: 2em, stroke: 0.4pt + secondary)
+        #h(0.8em)
+        #text(size: cfg.section-size, fill: primary, tracking: 0.1em)[
+          #if show-num [#text(fill: secondary)[#numbering("i", sec-num).] #h(0.3em)]
+          #smallcaps[#title]
+        ]
+        #h(0.8em)
+        #line(length: 2em, stroke: 0.4pt + secondary)
       ]
-      #h(0.8em)
-      #line(length: 2em, stroke: 0.4pt + secondary)
     ]
   },
 
