@@ -149,7 +149,7 @@ All configuration is done through the `beautitled-setup` function. You can call 
 
 == Example 1: Basic Document with Chapter
 
-#image("../gallery/examples/example-1.png", width: 100%)
+#image("/gallery/examples/example-1.png", width: 100%)
 
 *Code:*
 ```typst
@@ -165,7 +165,7 @@ Ut enim ad minim veniam...
 
 == Example 2: Without Chapter (Sections Only)
 
-#image("../gallery/examples/example-2.png", width: 100%)
+#image("/gallery/examples/example-2.png", width: 100%)
 
 *Code:*
 ```typst
@@ -180,7 +180,7 @@ Ut enim ad minim veniam...
 
 == Example 3: Academic Style with Custom Colors
 
-#image("../gallery/examples/example-3.png", width: 100%)
+#image("/gallery/examples/example-3.png", width: 100%)
 
 *Code:*
 ```typst
@@ -200,7 +200,7 @@ Ut enim ad minim veniam...
 
 == Example 4: English Document
 
-#image("../gallery/examples/example-4.png", width: 100%)
+#image("/gallery/examples/example-4.png", width: 100%)
 
 *Code:*
 ```typst
@@ -218,7 +218,7 @@ Ut enim ad minim veniam...
 
 == Example 5: Without Numbering
 
-#image("../gallery/examples/example-5.png", width: 100%)
+#image("/gallery/examples/example-5.png", width: 100%)
 
 *Code:*
 ```typst
@@ -237,7 +237,7 @@ Ut enim ad minim veniam...
 
 == Example 6: Different Styles Comparison
 
-#image("../gallery/examples/example-6.png", width: 100%)
+#image("/gallery/examples/example-6.png", width: 100%)
 
 // ============================================================================
 = Table of Contents
@@ -327,42 +327,42 @@ These options can be set via `beautitled-setup`:
   [
     #text(size: 9pt, weight: "bold")[titled] #text(size: 8pt, fill: gray)[(default)]
     #v(0.3em)
-    #image("../gallery/toc/toc-titled.png", width: 100%)
+    #image("/gallery/toc/toc-titled.png", width: 100%)
   ],
   [
     #text(size: 9pt, weight: "bold")[classic]
     #v(0.3em)
-    #image("../gallery/toc/toc-classic.png", width: 100%)
+    #image("/gallery/toc/toc-classic.png", width: 100%)
   ],
   [
     #text(size: 9pt, weight: "bold")[modern]
     #v(0.3em)
-    #image("../gallery/toc/toc-modern.png", width: 100%)
+    #image("/gallery/toc/toc-modern.png", width: 100%)
   ],
   [
     #text(size: 9pt, weight: "bold")[elegant]
     #v(0.3em)
-    #image("../gallery/toc/toc-elegant.png", width: 100%)
+    #image("/gallery/toc/toc-elegant.png", width: 100%)
   ],
   [
     #text(size: 9pt, weight: "bold")[bold]
     #v(0.3em)
-    #image("../gallery/toc/toc-bold.png", width: 100%)
+    #image("/gallery/toc/toc-bold.png", width: 100%)
   ],
   [
     #text(size: 9pt, weight: "bold")[minimal]
     #v(0.3em)
-    #image("../gallery/toc/toc-minimal.png", width: 100%)
+    #image("/gallery/toc/toc-minimal.png", width: 100%)
   ],
   [
     #text(size: 9pt, weight: "bold")[scholarly]
     #v(0.3em)
-    #image("../gallery/toc/toc-scholarly.png", width: 100%)
+    #image("/gallery/toc/toc-scholarly.png", width: 100%)
   ],
   [
     #text(size: 9pt, weight: "bold")[simple]
     #v(0.3em)
-    #image("../gallery/toc/toc-simple.png", width: 100%)
+    #image("/gallery/toc/toc-simple.png", width: 100%)
   ],
 )
 
@@ -469,23 +469,23 @@ beautitled works well with other Typst packages. Just make sure to call `beautit
 #grid(
   columns: (1fr, 1fr, 1fr),
   gutter: 1em,
-  [#text(size: 9pt, weight: "bold")[titled] #v(0.3em) #image("../gallery/styles/titled.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[classic] #v(0.3em) #image("../gallery/styles/classic.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[modern] #v(0.3em) #image("../gallery/styles/modern.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[elegant] #v(0.3em) #image("../gallery/styles/elegant.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[bold] #v(0.3em) #image("../gallery/styles/bold.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[creative] #v(0.3em) #image("../gallery/styles/creative.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[minimal] #v(0.3em) #image("../gallery/styles/minimal.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[vintage] #v(0.3em) #image("../gallery/styles/vintage.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[schoolbook] #v(0.3em) #image("../gallery/styles/schoolbook.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[notes] #v(0.3em) #image("../gallery/styles/notes.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[clean] #v(0.3em) #image("../gallery/styles/clean.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[technical] #v(0.3em) #image("../gallery/styles/technical.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[academic] #v(0.3em) #image("../gallery/styles/academic.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[textbook] #v(0.3em) #image("../gallery/styles/textbook.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[scholarly] #v(0.3em) #image("../gallery/styles/scholarly.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[classical] #v(0.3em) #image("../gallery/styles/classical.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[educational] #v(0.3em) #image("../gallery/styles/educational.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[structured] #v(0.3em) #image("../gallery/styles/structured.png", width: 100%)],
-  [#text(size: 9pt, weight: "bold")[magazine] #v(0.3em) #image("../gallery/styles/magazine.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[titled] #v(0.3em) #image("/gallery/styles/titled.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[classic] #v(0.3em) #image("/gallery/styles/classic.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[modern] #v(0.3em) #image("/gallery/styles/modern.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[elegant] #v(0.3em) #image("/gallery/styles/elegant.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[bold] #v(0.3em) #image("/gallery/styles/bold.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[creative] #v(0.3em) #image("/gallery/styles/creative.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[minimal] #v(0.3em) #image("/gallery/styles/minimal.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[vintage] #v(0.3em) #image("/gallery/styles/vintage.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[schoolbook] #v(0.3em) #image("/gallery/styles/schoolbook.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[notes] #v(0.3em) #image("/gallery/styles/notes.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[clean] #v(0.3em) #image("/gallery/styles/clean.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[technical] #v(0.3em) #image("/gallery/styles/technical.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[academic] #v(0.3em) #image("/gallery/styles/academic.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[textbook] #v(0.3em) #image("/gallery/styles/textbook.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[scholarly] #v(0.3em) #image("/gallery/styles/scholarly.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[classical] #v(0.3em) #image("/gallery/styles/classical.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[educational] #v(0.3em) #image("/gallery/styles/educational.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[structured] #v(0.3em) #image("/gallery/styles/structured.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[magazine] #v(0.3em) #image("/gallery/styles/magazine.png", width: 100%)],
 )
