@@ -130,6 +130,7 @@
   chapter-pagebreak: false,  // Automatic page break before chapters
 
   // TOC styling
+  toc-title: "Table of Contents",  // Default TOC title
   toc-style: none,  // none = use same as style, or specify different style name
   toc-indent: 1em,
   toc-chapter-size: 12pt,
@@ -168,6 +169,7 @@
   subsection-above: none,
   subsection-below: none,
   chapter-pagebreak: none,
+  toc-title: none,
   toc-style: none,
   toc-indent: none,
   toc-chapter-size: none,
@@ -202,6 +204,7 @@
     if subsection-above != none { new.subsection-above = subsection-above }
     if subsection-below != none { new.subsection-below = subsection-below }
     if chapter-pagebreak != none { new.chapter-pagebreak = chapter-pagebreak }
+    if toc-title != none { new.toc-title = toc-title }
     if toc-style != none { new.toc-style = toc-style }
     if toc-indent != none { new.toc-indent = toc-indent }
     if toc-chapter-size != none { new.toc-chapter-size = toc-chapter-size }
@@ -691,12 +694,13 @@
 
 /// Styled table of contents
 #let beautitled-toc(
-  title: "Table des matières",
+  title: auto,  // auto = use config toc-title, none = no title, or custom string
   depth: 3,
   style: none,  // Override style for TOC only
   title-align: center,  // Title alignment: center, left, right
 ) = context {
   let cfg = beautitled-config.get()
+  let actual-title = if title == auto { cfg.toc-title } else { title }
   let toc-style-name = if style != none { style } else if cfg.toc-style != none { cfg.toc-style } else { cfg.style }
   let primary = cfg.primary-color
   let secondary = cfg.secondary-color
@@ -704,9 +708,9 @@
   let toc-renderer = get-toc-style(toc-style-name, cfg)
 
   // Title (only if provided)
-  if title != none {
+  if actual-title != none {
     align(title-align)[
-      #text(size: cfg.chapter-size, weight: "bold", fill: primary)[#title]
+      #text(size: cfg.chapter-size, weight: "bold", fill: primary)[#actual-title]
     ]
     v(1em)
   }
