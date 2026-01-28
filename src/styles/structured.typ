@@ -34,14 +34,22 @@
     let primary = cfg.primary-color
     let accent = cfg.accent-color
 
-    text(size: cfg.section-size, weight: "bold", fill: primary)[
-      #if show-num [
-        #box(stroke: 0.8pt + accent, inset: (x: 0.3em, y: 0.1em))[
-          #text(size: 10pt, fill: accent)[#sec-num]
-        ]
-        #h(0.5em)
-      ]
-      #title
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #grid(
+        columns: (auto, 1fr),
+        gutter: 0.6em,
+        align: horizon,
+        [
+          #if show-num [
+            #box(stroke: 1.2pt + accent, inset: 0.4em)[
+              #text(size: 14pt, weight: "bold", fill: accent)[#sec-num]
+            ]
+          ]
+        ],
+        [
+          #text(size: cfg.section-size, weight: "bold", fill: primary)[#title]
+        ],
+      )
     ]
   },
 
