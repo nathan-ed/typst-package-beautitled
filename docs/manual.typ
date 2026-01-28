@@ -19,6 +19,8 @@
   #text(size: 16pt, fill: gray)[User Manual]
   #v(0.3em)
   #text(size: 11pt, fill: gray)[Version 0.1.0]
+  #v(0.5em)
+  #text(size: 11pt)[Nathan Scheinmann]
 ]
 
 #v(2em)
