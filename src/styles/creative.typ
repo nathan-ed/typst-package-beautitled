@@ -64,7 +64,7 @@
       box(width: 8pt, height: 2pt, stroke: 0.8pt + cfg.accent-color),
       box(width: 4pt, height: 2pt, stroke: 0.8pt + secondary),
       text(size: cfg.subsection-size, weight: "semibold", fill: primary)[
-        #if show-num [#text(fill: secondary)[#sec-num.#subsec-num]#h(0.3em)]
+        #if show-num [#text(fill: secondary)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)]#h(0.3em)]
         #title
       ],
     )
@@ -75,7 +75,7 @@
     let secondary = cfg.secondary-color
     text(size: cfg.subsubsection-size, fill: primary)[
       #text(fill: cfg.accent-color)[→]#h(0.2em)
-      #if show-num [#text(fill: secondary)[#sec-num.#subsec-num.#subsubsec-num]#h(0.2em)]
+      #if show-num [#text(fill: secondary)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)]#h(0.2em)]
       #text(weight: "medium")[#title]
     ]
   },

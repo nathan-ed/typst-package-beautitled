@@ -34,7 +34,7 @@
     let primary = cfg.primary-color
     let accent = cfg.accent-color
     text(size: cfg.subsection-size, weight: "bold", fill: primary)[
-      #if show-num [#text(fill: accent)[#sec-num.#subsec-num]#h(0.4em)]
+      #if show-num [#text(fill: accent)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)]#h(0.4em)]
       #title
     ]
   },
@@ -42,7 +42,7 @@
   subsubsection: (title, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
     let primary = cfg.primary-color
     text(size: cfg.subsubsection-size, weight: "semibold", fill: primary)[
-      #if show-num [#sec-num.#subsec-num.#subsubsec-num#h(0.4em)]
+      #if show-num [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)#h(0.4em)]
       #title
     ]
   },

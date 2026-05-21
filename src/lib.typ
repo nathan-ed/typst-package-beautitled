@@ -228,6 +228,9 @@
 // State to prevent show rule recursion
 #let _beautitled-internal = state("beautitled-internal", false)
 
+// Protected dot separator for numbering (prevents decimal-comma regex from matching)
+#let _numsep = "\u{2060}.\u{2060}"
+
 /// Reset all counters to 0
 #let reset-counters() = {
   chapter-counter.update(0)
@@ -308,9 +311,9 @@
     // Create outline entry for TOC/bookmarks
     let outline-title = if show-num {
       if ch-num > 0 {
-        [#ch-num.#sec-num #title]
+        [#str(ch-num)#_numsep#str(sec-num) #title]
       } else {
-        [#sec-num. #title]
+        [#str(sec-num). #title]
       }
     } else {
       title
@@ -342,7 +345,7 @@
 
     // Create outline entry for TOC/bookmarks
     let outline-title = if show-num {
-      [#sec-num.#subsec-num #title]
+      [#str(sec-num)#_numsep#str(subsec-num) #title]
     } else {
       title
     }
@@ -372,7 +375,7 @@
 
     // Create outline entry for bookmarks
     let outline-title = if show-num {
-      [#sec-num.#subsec-num.#subsubsec-num #title]
+      [#str(sec-num)#_numsep#str(subsec-num)#_numsep#str(subsubsec-num) #title]
     } else {
       title
     }
@@ -381,7 +384,7 @@
       (style.subsubsection)(title, sec-num, subsec-num, subsubsec-num, cfg, show-num)
     } else {
       text(weight: "semibold", size: 10pt)[
-        #if show-num [#sec-num.#subsec-num.#subsubsec-num #h(0.4em)]
+        #if show-num [#str(sec-num)#_numsep#str(subsec-num)#_numsep#str(subsubsec-num) #h(0.4em)]
         #title
       ]
     }

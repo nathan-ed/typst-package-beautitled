@@ -18,7 +18,7 @@ A Typst package for creating beautiful, print-friendly title styles for document
 ## Quick Start
 
 ```typst
-#import "@preview/beautitled:0.1.0": *
+#import "@preview/beautitled:0.2.0": *
 
 #beautitled-setup(style: "titled")
 #show: beautitled-init
@@ -209,6 +209,18 @@ A Typst package for creating beautiful, print-friendly title styles for document
 
 - Full manual: `manual.typ` / `manual.pdf`
 - Style showcase: `demo.typ` / `demo.pdf`
+
+## Changelog
+
+### v0.2.0
+
+- **Fix**: Use Unicode word joiners (`\u{2060}`) around dots in section numbering — prevents decimal-comma localization from rendering "1.2" as "1,2" in affected locales
+- Applied to `lib.typ` and all 19 style files
+- Compiler requirement updated to `0.14.2`
+
+### v0.1.0
+
+- Initial release: 19 styles, TOC support, language presets, color themes, show-rule integration
 
 ## License
 

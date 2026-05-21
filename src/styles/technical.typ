@@ -47,7 +47,7 @@
 
     text(size: cfg.subsection-size, weight: "bold", fill: primary)[
       #if show-num [
-        #text(size: 9pt, fill: secondary)[#if ch-num > 0 [#ch-num.]#sec-num.#subsec-num]
+        #text(size: 9pt, fill: secondary)[#if ch-num > 0 [#ch-num.]#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)]
         #h(0.5em)
       ]
       #title
@@ -60,7 +60,7 @@
 
     pad(left: 0.8em)[
       #text(size: cfg.subsubsection-size, weight: "semibold", fill: primary)[
-        #if show-num [#text(size: 9pt, fill: secondary)[#sec-num.#subsec-num.#subsubsec-num]#h(0.4em)]
+        #if show-num [#text(size: 9pt, fill: secondary)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)]#h(0.4em)]
         #title
       ]
     ]

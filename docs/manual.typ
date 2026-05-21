@@ -1,6 +1,6 @@
 // beautitled - User Manual
 // ============================================================================
-#import "@preview/beautitled:0.1.0": *
+#import "@preview/beautitled:0.2.0": *
 
 #set page(margin: 2.5cm)
 #set text(font: "Linux Libertine", size: 11pt)
@@ -18,7 +18,7 @@
   #v(0.5em)
   #text(size: 16pt, fill: gray)[User Manual]
   #v(0.3em)
-  #text(size: 11pt, fill: gray)[Version 0.1.0]
+  #text(size: 11pt, fill: gray)[Version 0.2.0]
   #v(0.5em)
   #text(size: 11pt)[Nathan Scheinmann]
 ]
@@ -49,13 +49,13 @@
 == Installation
 
 ```typst
-#import "@preview/beautitled:0.1.0": *
+#import "@preview/beautitled:0.2.0": *
 ```
 
 == Basic Usage
 
 ```typst
-#import "@preview/beautitled:0.1.0": *
+#import "@preview/beautitled:0.2.0": *
 
 #beautitled-setup(style: "titled")
 #show: beautitled-init
@@ -397,7 +397,7 @@ beautitled includes several presets for common configurations. Presets are calle
 == Complete Example
 
 ```typst
-#import "@preview/beautitled:0.1.0": *
+#import "@preview/beautitled:0.2.0": *
 
 // 1. Choose a style
 #beautitled-setup(style: "scholarly")
@@ -461,7 +461,7 @@ beautitled works well with other Typst packages. Just make sure to call `beautit
 // ============================================================================
 = Changelog
 
-== Version 0.1.0
+== Version 0.2.0
 - Initial release
 - 19 styles
 - Full configuration support

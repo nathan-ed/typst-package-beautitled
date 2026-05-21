@@ -35,7 +35,7 @@
     let secondary = cfg.secondary-color
 
     text(size: cfg.subsection-size, weight: "semibold", fill: primary)[
-      #if show-num [#text(fill: secondary)[#sec-num.#subsec-num]#h(0.4em)]
+      #if show-num [#text(fill: secondary)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)]#h(0.4em)]
       #title
     ]
   },
@@ -44,7 +44,7 @@
     let primary = cfg.primary-color
 
     text(size: cfg.subsubsection-size, style: "italic", fill: primary)[
-      #if show-num [#sec-num.#subsec-num.#subsubsec-num#h(0.4em)]
+      #if show-num [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)#h(0.4em)]
       #title
     ]
   },
