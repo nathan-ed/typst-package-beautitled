@@ -225,6 +225,12 @@
 #let subsection-counter = counter("beautitled-subsection")
 #let subsubsection-counter = counter("beautitled-subsubsection")
 
+// Counters for real chapters, ie counting those who are not numbered
+#let real-chapter-counter = counter("beautitled-real-chapter")
+#let real-section-counter = counter("beautitled-real-section")
+#let real-subsection-counter = counter("beautitled-real-subsection")
+#let real-subsubsection-counter = counter("beautitled-real-subsubsection")
+
 // State to prevent show rule recursion
 #let _beautitled-internal = state("beautitled-internal", false)
 
@@ -237,6 +243,11 @@
   section-counter.update(0)
   subsection-counter.update(0)
   subsubsection-counter.update(0)
+
+  real-chapter-counter.update(0)
+  real-section-counter.update(0)
+  real-subsection-counter.update(0)
+  real-subsubsection-counter.update(0)
 }
 
 // ============================================================================
@@ -255,20 +266,27 @@
 // Chapter Heading
 // ============================================================================
 
-#let chapter(title, numbered: auto, label: none, from-init: false) = {
-  chapter-counter.step()
+#let chapter(title, numbered: true, label: none, from-init: false) = {
+  if numbered {
+    chapter-counter.step()
+  }
+  real-chapter-counter.step()
   section-counter.update(0)
   subsection-counter.update(0)
   subsubsection-counter.update(0)
+
+  real-section-counter.update(0)
+  real-subsection-counter.update(0)
+  real-subsubsection-counter.update(0)
 
   context {
     let cfg = beautitled-config.get()
     let style = get-style-renderer(cfg.style)
     let num = chapter-counter.get().first()
-    let show-num = if numbered == auto { cfg.show-chapter-number } else { numbered }
+    let show-num = if numbered { cfg.show-chapter-number } else { numbered }
 
     // Page break before chapter if enabled
-    if cfg.chapter-pagebreak and num > 1 {
+    if cfg.chapter-pagebreak and real-chapter-counter.get().first() > 1 {
       pagebreak(weak: true)
     }
 
@@ -294,17 +312,24 @@
 // Section Heading
 // ============================================================================
 
-#let section(title, numbered: auto, label: none, from-init: false) = {
-  section-counter.step()
+#let section(title, numbered: true, label: none, from-init: false) = {
+  if numbered {
+    section-counter.step()
+  }
+  real-section-counter.step()
+
   subsection-counter.update(0)
   subsubsection-counter.update(0)
+
+  real-subsection-counter.update(0)
+  real-subsubsection-counter.update(0)
 
   context {
     let cfg = beautitled-config.get()
     let style = get-style-renderer(cfg.style)
     let ch-num = chapter-counter.get().first()
     let sec-num = section-counter.get().first()
-    let show-num = if numbered == auto { cfg.show-section-number } else { numbered }
+    let show-num = if numbered { cfg.show-section-number } else { numbered }
 
     v(cfg.section-above)
 
@@ -329,9 +354,14 @@
 // Subsection Heading
 // ============================================================================
 
-#let subsection(title, numbered: auto, label: none, from-init: false) = {
-  subsection-counter.step()
+#let subsection(title, numbered: true, label: none, from-init: false) = {
+  if numbered {
+    subsection-counter.step()
+  }
+  real-subsection-counter.step()
+
   subsubsection-counter.update(0)
+  real-subsubsection-counter.update(0)
 
   context {
     let cfg = beautitled-config.get()
@@ -339,7 +369,7 @@
     let ch-num = chapter-counter.get().first()
     let sec-num = section-counter.get().first()
     let subsec-num = subsection-counter.get().first()
-    let show-num = if numbered == auto { cfg.show-subsection-number } else { numbered }
+    let show-num = if numbered { cfg.show-subsection-number } else { numbered }
 
     v(cfg.subsection-above)
 
@@ -360,8 +390,11 @@
 // Subsubsection Heading
 // ============================================================================
 
-#let subsubsection(title, numbered: auto, label: none, from-init: false) = {
-  subsubsection-counter.step()
+#let subsubsection(title, numbered: true, label: none, from-init: false) = {
+  if numbered {
+    subsubsection-counter.step()
+  }
+  real-subsubsection-counter.step()
 
   context {
     let cfg = beautitled-config.get()
@@ -369,7 +402,7 @@
     let sec-num = section-counter.get().first()
     let subsec-num = subsection-counter.get().first()
     let subsubsec-num = subsubsection-counter.get().first()
-    let show-num = if numbered == auto { cfg.show-subsection-number } else { numbered }
+    let show-num = if numbered { cfg.show-subsection-number } else { numbered }
 
     v(cfg.subsection-above)
 
