@@ -133,8 +133,9 @@
   subsection-below: 0.4em,
 
   // Page breaks
-  part-pagebreak: true,  // Automatic page break before parts
-  chapter-pagebreak: false,  // Automatic page break before chapters
+  part-pagebreak: true,    // Automatic page break before parts (inline mode)
+  chapter-pagebreak: false, // Automatic page break before chapters
+  part-fullpage: true,     // LaTeX-style: part gets its own centered page
 
   // TOC styling
   toc-title: "Table of Contents",  // Default TOC title
@@ -184,6 +185,7 @@
   subsection-below: none,
   part-pagebreak: none,
   chapter-pagebreak: none,
+  part-fullpage: none,
   toc-title: none,
   toc-style: none,
   toc-indent: none,
@@ -227,6 +229,7 @@
     if subsection-below != none { new.subsection-below = subsection-below }
     if part-pagebreak != none { new.part-pagebreak = part-pagebreak }
     if chapter-pagebreak != none { new.chapter-pagebreak = chapter-pagebreak }
+    if part-fullpage != none { new.part-fullpage = part-fullpage }
     if toc-title != none { new.toc-title = toc-title }
     if toc-style != none { new.toc-style = toc-style }
     if toc-indent != none { new.toc-indent = toc-indent }
@@ -299,7 +302,16 @@
   ]
 }
 
-#let part(title, numbered: auto, label: none, from-init: false) = {
+#let part(
+  title,
+  numbered: auto,
+  label: none,
+  fullpage: auto,
+  image: none,
+  image-caption: none,
+  image-position: "below",  // "above" or "below" the title
+  from-init: false,
+) = {
   beautitled-config.update(cfg => {
     let new = cfg
     new.enable-parts = true
@@ -316,12 +328,7 @@
     let style = get-style-renderer(cfg.style)
     let num = part-counter.get().first()
     let show-num = if numbered == auto { cfg.show-part-number } else { numbered }
-
-    if cfg.part-pagebreak and num > 1 {
-      pagebreak(weak: true)
-    }
-
-    v(cfg.part-above)
+    let use-fullpage = if fullpage == auto { cfg.part-fullpage } else { fullpage }
 
     let outline-title = if show-num {
       [#cfg.part-prefix #numbering("I", num) : #title]
@@ -329,17 +336,51 @@
       title
     }
 
-    if "part" in style {
-      (style.part)(title, num, cfg, show-num)
-    } else {
-      _default-part-style(title, num, cfg, show-num)
+    let meta-and-heading = {
+      if label != none {
+        [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "part", show-num: show-num, title: title)) #label]
+      }
+      place(hide[#heading(level: 1, outlined: true, bookmarked: true, outline-title) <_btl-internal>])
     }
 
-    if label != none {
-      [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "part", show-num: show-num, title: title)) #label]
+    if use-fullpage {
+      // LaTeX-style: part gets its own vertically-centred page
+      pagebreak(weak: true)
+      let img-block = if image != none {
+        v(2em)
+        if image-caption != none {
+          figure(image, caption: image-caption, numbering: none, supplement: none)
+        } else {
+          image
+        }
+      }
+      let title-block = if "part" in style {
+        (style.part)(title, num, cfg, show-num)
+      } else {
+        _default-part-style(title, num, cfg, show-num)
+      }
+      v(1fr)
+      align(center)[
+        #if image-position == "above" and image != none { img-block }
+        #title-block
+        #if image-position != "above" and image != none { img-block }
+      ]
+      meta-and-heading
+      v(1fr)
+      pagebreak(weak: true)
+    } else {
+      if cfg.part-pagebreak and num > 1 {
+        pagebreak(weak: true)
+      }
+      v(cfg.part-above)
+      if "part" in style {
+        (style.part)(title, num, cfg, show-num)
+      } else {
+        _default-part-style(title, num, cfg, show-num)
+      }
+      meta-and-heading
+      v(cfg.part-below)
     }
-    place(hide[#heading(level: 1, outlined: true, bookmarked: true, outline-title) <_btl-internal>])
-    v(cfg.part-below)
   }
 }
 

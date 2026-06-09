@@ -1,6 +1,6 @@
 // beautitled - User Manual
 // ============================================================================
-#import "@preview/beautitled:0.2.5": *
+#import "@preview/beautitled:0.2.6": *
 
 #set page(margin: 2.5cm)
 #set text(font: "Linux Libertine", size: 11pt)
@@ -18,7 +18,7 @@
   #v(0.5em)
   #text(size: 16pt, fill: gray)[User Manual]
   #v(0.3em)
-  #text(size: 11pt, fill: gray)[Version 0.2.5]
+  #text(size: 11pt, fill: gray)[Version 0.2.6]
   #v(0.5em)
   #text(size: 11pt)[Nathan Scheinmann]
 ]
@@ -51,13 +51,13 @@
 == Installation
 
 ```typst
-#import "@preview/beautitled:0.2.5": *
+#import "@preview/beautitled:0.2.6": *
 ```
 
 == Basic Usage
 
 ```typst
-#import "@preview/beautitled:0.2.5": *
+#import "@preview/beautitled:0.2.6": *
 
 #beautitled-setup(style: "titled")
 #show: beautitled-init
@@ -75,6 +75,10 @@ Typst has arbitrary heading levels, but no dedicated LaTeX-style `\part`.
 Using `#part[...]` automatically makes parts the highest outline level for the
 rest of the document. Without parts, chapters remain the highest level.
 
+By default (`part-fullpage: true`), each part occupies its own dedicated page with
+the title vertically and horizontally centered — matching LaTeX's default `\part` behavior.
+Every style has its own coherent part renderer.
+
 ```typst
 #beautitled-setup(style: "modern")
 #show: beautitled-init
@@ -83,6 +87,33 @@ rest of the document. Without parts, chapters remain the highest level.
 #chapter[Numbers]
 #section[Integers]
 ```
+
+=== Part with Image
+
+An optional image can be placed above or below the title on the part page.
+The caption uses Typst's native `figure` rendering:
+
+```typst
+#part(
+  image: image("cover.png", width: 70%),
+  image-caption: [A conceptual overview],
+  image-position: "below",  // "above" or "below" (default: "below")
+)[Advanced Topics]
+```
+
+=== Disabling Full-Page Parts
+
+To use inline parts (no dedicated page), set `part-fullpage: false` globally
+or override per call:
+
+```typst
+#beautitled-setup(part-fullpage: false)
+
+// Or per call:
+#part(fullpage: false)[Appendices]
+```
+
+=== Native Headings as Parts
 
 With `enable-parts: true`, native headings become:
 
@@ -149,7 +180,8 @@ All configuration is done through the `beautitled-setup` function. You can call 
   [`section-below`], [`0.4em`], [Space below sections],
   [`subsection-above`], [`0.5em`], [Space above subsections],
   [`subsection-below`], [`0.3em`], [Space below subsections],
-  [`part-pagebreak`], [`true`], [Page break before parts after the first],
+  [`part-fullpage`], [`true`], [Give each part its own vertically-centred page (LaTeX default)],
+  [`part-pagebreak`], [`true`], [Page break before parts after the first (inline mode only)],
   [`chapter-pagebreak`], [`false`], [Page break before chapters after the first],
   [`toc-part-size`], [`14pt`], [Font size for part entries in the table of contents],
 )
@@ -494,7 +526,7 @@ beautitled includes several presets for common configurations. Presets are calle
 == Complete Example
 
 ```typst
-#import "@preview/beautitled:0.2.5": *
+#import "@preview/beautitled:0.2.6": *
 
 // 1. Choose a style
 #beautitled-setup(style: "scholarly")

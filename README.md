@@ -19,7 +19,7 @@ A Typst package for creating beautiful, print-friendly title styles for document
 ## Quick Start
 
 ```typst
-#import "@preview/beautitled:0.2.5": *
+#import "@preview/beautitled:0.2.6": *
 
 #beautitled-setup(style: "titled")
 #show: beautitled-init
@@ -32,9 +32,9 @@ A Typst package for creating beautiful, print-friendly title styles for document
 ## Parts
 
 Typst has generic heading levels, but not a dedicated LaTeX-style `\part`.
-`beautitled` provides one with `#part[...]`. Existing documents keep their
-current hierarchy by default: `= Heading` is a chapter. As soon as you use
-`#part[...]`, chapters move one outline level below parts.
+`beautitled` provides one with `#part[...]`. By default each part gets its own
+dedicated page with the title vertically and horizontally centred — matching
+LaTeX's default behavior. Every style has its own coherent part renderer.
 
 ```typst
 #part[Foundations]
@@ -42,8 +42,24 @@ current hierarchy by default: `= Heading` is a chapter. As soon as you use
 #section[Integers]
 ```
 
-To make native Typst headings use parts as the highest level from the start,
-enable parts:
+### Part with image
+
+```typst
+#part(
+  image: image("cover.png", width: 70%),
+  image-caption: [A conceptual overview],
+  image-position: "below",  // "above" or "below" (default)
+)[Advanced Topics]
+```
+
+### Disable full-page parts
+
+```typst
+#beautitled-setup(part-fullpage: false)  // global
+#part(fullpage: false)[Appendices]       // per call
+```
+
+### Native headings as parts
 
 ```typst
 #beautitled-setup(enable-parts: true)
@@ -119,6 +135,17 @@ enable parts:
   </tr>
 </table>
 
+## Parts Gallery
+
+<table>
+  <tr>
+    <td align="center"><img src="gallery/parts/parts-1.png" width="160" alt="modern style full-page part page with accent bar and title centred"><br><strong>modern</strong></td>
+    <td align="center"><img src="gallery/parts/parts-2.png" width="160" alt="elegant style full-page part page with ornamental rules and small caps"><br><strong>elegant</strong></td>
+    <td align="center"><img src="gallery/parts/parts-3.png" width="160" alt="titled style full-page part page with boxed border"><br><strong>titled</strong></td>
+    <td align="center"><img src="gallery/parts/parts-4.png" width="160" alt="scholarly style full-page part page with thin horizontal rules"><br><strong>scholarly</strong></td>
+  </tr>
+</table>
+
 ## TOC Style Gallery
 
 <table>
@@ -171,7 +198,8 @@ enable parts:
   section-prefix: "Section",
 
   // Page breaks
-  part-pagebreak: true,
+  part-fullpage: true,          // LaTeX-style: part gets its own centred page
+  part-pagebreak: true,         // (inline mode) break before parts after the first
   chapter-pagebreak: false,
 
   // Table of Contents
@@ -244,6 +272,15 @@ enable parts:
 - Style showcase: `demo.typ` / `demo.pdf`
 
 ## Changelog
+
+### v0.2.6 — 2026-06-09
+
+#### Added
+- `part-fullpage: true` (new default): each part gets its own vertically and horizontally centred page, matching LaTeX's `\part` behavior — each style has its own coherent part renderer
+- `#part(fullpage: false)`: per-call override to use inline parts
+- `#part(image: ...)`: optional image on the part page (fullpage mode only)
+- `#part(image-caption: ...)`: caption rendered via Typst's native `figure`
+- `#part(image-position: "above"|"below")`: place image above or below the title (default: `"below"`)
 
 ### v0.2.5 — 2026-06-09
 
