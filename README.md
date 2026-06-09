@@ -14,7 +14,7 @@ A Typst package for creating beautiful, print-friendly title styles for document
 - **Native Typst support** - Works with `= Heading` syntax
 - **Cross-references** - `beautitled-ref` for labelled heading refs with optional page numbers
 
-**[View the full manual (PDF)](https://github.com/nathan-ed/typst-package-beautitled/blob/38dee8b76f809f1fd195858dfb9f27296eadd0f8/docs/manual.pdf)**
+**[View the full manual (PDF)](https://github.com/nathan-ed/typst-package-beautitled/blob/a40b71cf0ce2510eaba17c54338e57d7c17ce2de/docs/manual.pdf)**
 
 ## Quick Start
 
