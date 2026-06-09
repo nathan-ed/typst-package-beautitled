@@ -5,6 +5,33 @@
 // ============================================================================
 
 #let style-textbook = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let accent = cfg.accent-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #grid(
+        columns: (auto, 1fr),
+        gutter: 1em,
+        align: (right + top, left + top),
+        [
+          #if show-num [
+            #text(size: 56pt, weight: "bold", fill: accent.lighten(60%))[#numbering("I", num)]
+          ]
+        ],
+        [
+          #if show-num [
+            #text(size: 10pt, fill: accent, weight: "medium", tracking: 0.14em)[#upper(cfg.part-prefix)]
+            #v(0.25em)
+          ]
+          #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+        ],
+      )
+      #v(0.3em)
+      #line(length: 100%, stroke: 1pt + accent)
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let accent = cfg.accent-color

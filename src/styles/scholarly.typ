@@ -5,6 +5,25 @@
 // ============================================================================
 
 #let style-scholarly = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #line(length: 38%, stroke: 0.6pt + secondary)
+        #v(0.75em)
+        #if show-num [
+          #text(size: 10pt, fill: secondary, tracking: 0.18em)[#upper(cfg.part-prefix) #numbering("I", num)]
+          #v(0.5em)
+        ]
+        #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+        #v(0.75em)
+        #line(length: 38%, stroke: 0.6pt + secondary)
+      ]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color

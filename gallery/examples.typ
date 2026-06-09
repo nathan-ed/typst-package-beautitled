@@ -1,5 +1,5 @@
 // Gallery renders for manual examples
-#import "@preview/beautitled:0.2.0": *
+#import "@preview/beautitled:0.2.5": *
 
 #set page(width: 16cm, height: 12cm, margin: 0.8cm)
 #set text(font: "Linux Libertine", size: 10pt)

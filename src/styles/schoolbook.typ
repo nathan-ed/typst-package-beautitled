@@ -5,6 +5,21 @@
 // ============================================================================
 
 #let style-schoolbook = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let accent = cfg.accent-color
+
+    block(width: 100%, above: 0pt, below: 0pt, stroke: (bottom: 2pt + accent), inset: (bottom: 0.65em))[
+      #if show-num [
+        #text(size: 12pt, fill: accent, weight: "bold", tracking: 0.1em)[#upper(cfg.part-prefix) #numbering("I", num)]
+        #h(0.6em)
+        #text(size: 12pt, fill: accent)[—]
+        #h(0.6em)
+      ]
+      #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let accent = cfg.accent-color
