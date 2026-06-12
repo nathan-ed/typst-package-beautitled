@@ -1,6 +1,6 @@
 // beautitled - User Manual
 // ============================================================================
-#import "@preview/beautitled:0.2.0": *
+#import "@preview/beautitled:0.2.6": *
 
 #set page(margin: 2.5cm)
 #set text(font: "Linux Libertine", size: 11pt)
@@ -18,7 +18,7 @@
   #v(0.5em)
   #text(size: 16pt, fill: gray)[User Manual]
   #v(0.3em)
-  #text(size: 11pt, fill: gray)[Version 0.2.0]
+  #text(size: 11pt, fill: gray)[Version 0.2.6]
   #v(0.5em)
   #text(size: 11pt)[Nathan Scheinmann]
 ]
@@ -41,7 +41,9 @@
 - *Fully configurable* - Colors, sizes, spacing, and numbering
 - *Multilingual* - Customizable prefixes for any language
 - *Native Typst support* - Works with `= Heading` syntax
+- *Optional parts* - LaTeX-like parts above chapters
 - *Four heading levels* - Chapter, section, subsection, subsubsection
+- *Cross-references* - `beautitled-ref` for labelled heading refs with optional page numbers
 
 // ============================================================================
 = Quick Start
@@ -49,13 +51,13 @@
 == Installation
 
 ```typst
-#import "@preview/beautitled:0.2.0": *
+#import "@preview/beautitled:0.2.6": *
 ```
 
 == Basic Usage
 
 ```typst
-#import "@preview/beautitled:0.2.0": *
+#import "@preview/beautitled:0.2.6": *
 
 #beautitled-setup(style: "titled")
 #show: beautitled-init
@@ -64,6 +66,66 @@
 == My Section Title
 === My Subsection Title
 ==== My Subsubsection Title
+```
+
+== Parts
+
+Typst has arbitrary heading levels, but no dedicated LaTeX-style `\part`.
+*beautitled* adds `#part[...]` and can also remap native headings when parts are enabled.
+Using `#part[...]` automatically makes parts the highest outline level for the
+rest of the document. Without parts, chapters remain the highest level.
+
+By default (`part-fullpage: true`), each part occupies its own dedicated page with
+the title vertically and horizontally centered — matching LaTeX's default `\part` behavior.
+Every style has its own coherent part renderer.
+
+```typst
+#beautitled-setup(style: "modern")
+#show: beautitled-init
+
+#part[Foundations]
+#chapter[Numbers]
+#section[Integers]
+```
+
+=== Part with Image
+
+An optional image can be placed above or below the title on the part page.
+The caption uses Typst's native `figure` rendering:
+
+```typst
+#part(
+  image: image("cover.png", width: 70%),
+  image-caption: [A conceptual overview],
+  image-position: "below",  // "above" or "below" (default: "below")
+)[Advanced Topics]
+```
+
+=== Disabling Full-Page Parts
+
+To use inline parts (no dedicated page), set `part-fullpage: false` globally
+or override per call:
+
+```typst
+#beautitled-setup(part-fullpage: false)
+
+// Or per call:
+#part(fullpage: false)[Appendices]
+```
+
+=== Native Headings as Parts
+
+With `enable-parts: true`, native headings become:
+
+```typst
+#beautitled-setup(style: "modern", enable-parts: true)
+#show: beautitled-init
+
+= Foundations
+== Numbers
+=== Integers
+==== Arithmetic
+===== Divisibility
 ```
 
 // ============================================================================
@@ -90,28 +152,38 @@ All configuration is done through the `beautitled-setup` function. You can call 
   [`background-color`], [`white`], [Background color (rarely used)],
 
   // Font sizes
+  [`part-size`], [`24pt`], [Font size for part titles],
   [`chapter-size`], [`18pt`], [Font size for chapter titles],
   [`section-size`], [`14pt`], [Font size for section titles],
   [`subsection-size`], [`12pt`], [Font size for subsection titles],
   [`subsubsection-size`], [`11pt`], [Font size for subsubsection titles],
 
   // Numbering
+  [`enable-parts`], [`false`], [`false`: `= Heading` is a chapter; `true`: `= Heading` is a part and `== Heading` is a chapter],
+  [`show-part-number`], [`true`], [Show part numbers],
   [`show-chapter-number`], [`true`], [Show chapter numbers],
   [`show-section-number`], [`true`], [Show section numbers],
   [`show-subsection-number`], [`true`], [Show subsection numbers],
   [`show-chapter-in-section`], [`true`], [Show chapter info in section labels (titled style)],
 
   // Prefixes
+  [`part-prefix`], [`"Partie"`], [Text before part number],
   [`chapter-prefix`], [`"Chapter"`], [Text before chapter number],
   [`section-prefix`], [`"Section"`], [Text before section number],
 
   // Spacing
+  [`part-above`], [`2em`], [Space above parts],
+  [`part-below`], [`1.2em`], [Space below parts],
   [`chapter-above`], [`1.2em`], [Space above chapters],
   [`chapter-below`], [`0.5em`], [Space below chapters],
   [`section-above`], [`0.5em`], [Space above sections],
   [`section-below`], [`0.4em`], [Space below sections],
   [`subsection-above`], [`0.5em`], [Space above subsections],
   [`subsection-below`], [`0.3em`], [Space below subsections],
+  [`part-fullpage`], [`true`], [Give each part its own vertically-centred page (LaTeX default)],
+  [`part-pagebreak`], [`true`], [Page break before parts after the first (inline mode only)],
+  [`chapter-pagebreak`], [`false`], [Page break before chapters after the first],
+  [`toc-part-size`], [`14pt`], [Font size for part entries in the table of contents],
 )
 
 // ============================================================================
@@ -369,6 +441,63 @@ These options can be set via `beautitled-setup`:
 )
 
 // ============================================================================
+= Cross-References
+
+beautitled provides `beautitled-ref` (alias: `btl-ref`) to create clickable,
+numbered references to any labelled heading — part, chapter, section, subsection,
+or subsubsection.
+
+== Labelling a Heading
+
+Pass a `label:` named argument to any heading function:
+
+```typst
+#part(label: <part-found>)[Foundations]
+#chapter(label: <ch-intro>)[Introduction]
+#section(label: <sec-overview>)[Overview]
+```
+
+Or with native headings when using `beautitled-init`:
+
+```typst
+#beautitled-setup(enable-parts: false)
+#show: beautitled-init
+
+= Introduction <ch-intro>
+== Overview <sec-overview>
+```
+
+== Referencing
+
+```typst
+See #beautitled-ref(<ch-intro>)          // → "Chapitre 1"
+See #beautitled-ref(<sec-overview>)       // → "Section 1.1"
+See #btl-ref(<ch-intro>)                  // short alias
+See #beautitled-ref(<ch-intro>, show-page: true)  // → "Chapitre 1 (p. 2)"
+See #beautitled-ref(<sec-overview>, short: true)  // → "1.1"
+```
+
+== Parameters
+
+#table(
+  columns: (auto, auto, auto, 1fr),
+  inset: 8pt,
+  stroke: 0.4pt + gray,
+  fill: (col, row) => if row == 0 { luma(230) } else { none },
+  [*Parameter*], [*Type*], [*Default*], [*Description*],
+  [`target`], [`label`], [—], [The label attached to the heading],
+  [`show-page`], [`bool`], [`false`], [Append a page number in parentheses],
+  [`page-prefix`], [`str`], [`"p. "`], [Prefix before page number],
+  [`short`], [`bool`], [`false`], [Omit prefix word; show number only (e.g. `1.1` instead of `Section 1.1`)],
+)
+
+== Notes
+
+- The displayed prefix (`"Chapitre"`, `"Section"`, etc.) respects the active language preset.
+- When `show-part-number: false` (or the heading was called with `numbered: false`), the heading's title is shown instead of a number.
+- The reference is a clickable hyperlink to the heading's location in the document.
+
+// ============================================================================
 = Page Breaks
 
 Enable automatic page breaks before chapters:
@@ -397,7 +526,7 @@ beautitled includes several presets for common configurations. Presets are calle
 == Complete Example
 
 ```typst
-#import "@preview/beautitled:0.2.0": *
+#import "@preview/beautitled:0.2.6": *
 
 // 1. Choose a style
 #beautitled-setup(style: "scholarly")

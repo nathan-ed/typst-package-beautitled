@@ -5,6 +5,15 @@
 // ============================================================================
 
 #let style-clean = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+
+    text(size: cfg.part-size, weight: "bold", fill: primary)[
+      #if show-num [#cfg.part-prefix #numbering("I", num). #h(0.5em)]
+      #title
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
 

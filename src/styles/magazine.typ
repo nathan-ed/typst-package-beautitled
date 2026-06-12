@@ -5,6 +5,24 @@
 // ============================================================================
 
 #let style-magazine = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let accent = cfg.accent-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #if show-num [
+        #text(size: 84pt, weight: "bold", fill: secondary.lighten(65%))[#numbering("I", num)]
+        #v(-2.6em)
+      ]
+      #text(size: 10pt, fill: accent, weight: "bold", tracking: 0.18em)[#upper(cfg.part-prefix)]
+      #v(0.25em)
+      #text(size: cfg.part-size, weight: "black", fill: primary)[#title]
+      #v(0.25em)
+      #line(length: 100%, stroke: 2pt + primary)
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let accent = cfg.accent-color

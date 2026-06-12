@@ -5,6 +5,19 @@
 // ============================================================================
 
 #let style-bold = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let accent = cfg.accent-color
+
+    block(width: 100%, above: 0pt, below: 0pt, stroke: (left: 6pt + accent), inset: (left: 1.2em, y: 0.5em))[
+      #if show-num [
+        #text(size: 12pt, fill: accent, weight: "bold", tracking: 0.14em)[#upper(cfg.part-prefix) #numbering("I", num)]
+        #v(0.15em)
+      ]
+      #text(size: cfg.part-size, weight: "black", fill: primary)[#upper(title)]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let accent = cfg.accent-color

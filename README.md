@@ -8,17 +8,18 @@ A Typst package for creating beautiful, print-friendly title styles for document
 - **Print-friendly** - All styles use minimal ink (no heavy backgrounds)
 - **Fully configurable** - Colors, sizes, spacing, and numbering
 - **Styled Table of Contents** - Each style has a matching TOC design
+- **Optional parts** - LaTeX-like parts above chapters
 - **Page breaks** - Optional automatic page breaks before chapters
 - **Multilingual** - Customizable prefixes for any language
 - **Native Typst support** - Works with `= Heading` syntax
-- **Cross-references** - Full outline and bookmark support
+- **Cross-references** - `beautitled-ref` for labelled heading refs with optional page numbers
 
-**[View the full manual (PDF)](https://github.com/nathan-ed/typst-package-beautitled/blob/a0af23f163d15326c7034c252c239400550a3bdf/docs/manual.pdf)**
+**[View the full manual (PDF)](https://github.com/nathan-ed/typst-package-beautitled/blob/a40b71cf0ce2510eaba17c54338e57d7c17ce2de/docs/manual.pdf)**
 
 ## Quick Start
 
 ```typst
-#import "@preview/beautitled:0.2.0": *
+#import "@preview/beautitled:0.2.6": *
 
 #beautitled-setup(style: "titled")
 #show: beautitled-init
@@ -26,6 +27,48 @@ A Typst package for creating beautiful, print-friendly title styles for document
 = My Chapter Title
 == My Section Title
 === My Subsection Title
+```
+
+## Parts
+
+Typst has generic heading levels, but not a dedicated LaTeX-style `\part`.
+`beautitled` provides one with `#part[...]`. By default each part gets its own
+dedicated page with the title vertically and horizontally centred — matching
+LaTeX's default behavior. Every style has its own coherent part renderer.
+
+```typst
+#part[Foundations]
+#chapter[Numbers]
+#section[Integers]
+```
+
+### Part with image
+
+```typst
+#part(
+  image: image("cover.png", width: 70%),
+  image-caption: [A conceptual overview],
+  image-position: "below",  // "above" or "below" (default)
+)[Advanced Topics]
+```
+
+### Disable full-page parts
+
+```typst
+#beautitled-setup(part-fullpage: false)  // global
+#part(fullpage: false)[Appendices]       // per call
+```
+
+### Native headings as parts
+
+```typst
+#beautitled-setup(enable-parts: true)
+#show: beautitled-init
+
+= Foundations
+== Numbers
+=== Integers
+==== Arithmetic
 ```
 
 ## Available Styles (19)
@@ -92,6 +135,17 @@ A Typst package for creating beautiful, print-friendly title styles for document
   </tr>
 </table>
 
+## Parts Gallery
+
+<table>
+  <tr>
+    <td align="center"><img src="gallery/parts/parts-1.png" width="160" alt="modern style full-page part page with accent bar and title centred"><br><strong>modern</strong></td>
+    <td align="center"><img src="gallery/parts/parts-2.png" width="160" alt="elegant style full-page part page with ornamental rules and small caps"><br><strong>elegant</strong></td>
+    <td align="center"><img src="gallery/parts/parts-3.png" width="160" alt="titled style full-page part page with boxed border"><br><strong>titled</strong></td>
+    <td align="center"><img src="gallery/parts/parts-4.png" width="160" alt="scholarly style full-page part page with thin horizontal rules"><br><strong>scholarly</strong></td>
+  </tr>
+</table>
+
 ## TOC Style Gallery
 
 <table>
@@ -124,27 +178,34 @@ A Typst package for creating beautiful, print-friendly title styles for document
   accent-color: rgb("#2980b9"),
 
   // Font sizes
+  part-size: 24pt,
   chapter-size: 18pt,
   section-size: 14pt,
   subsection-size: 12pt,
   subsubsection-size: 11pt,
 
   // Numbering
+  enable-parts: false,          // false: = Chapter, true: = Part and == Chapter
+  show-part-number: true,
   show-chapter-number: true,
   show-section-number: true,
   show-subsection-number: true,
   show-chapter-in-section: true,
 
   // Prefixes (localization)
+  part-prefix: "Partie",
   chapter-prefix: "Chapitre",
   section-prefix: "Section",
 
   // Page breaks
+  part-fullpage: true,          // LaTeX-style: part gets its own centred page
+  part-pagebreak: true,         // (inline mode) break before parts after the first
   chapter-pagebreak: false,
 
   // Table of Contents
   toc-style: none,              // Different style for TOC (none = same as headings)
   toc-indent: 1em,
+  toc-part-size: 14pt,
   toc-fill: repeat[.],
 )
 ```
@@ -188,9 +249,9 @@ A Typst package for creating beautiful, print-friendly title styles for document
 ## Language Presets
 
 ```typst
-#preset-french()   // "Chapitre", "Section"
-#preset-english()  // "Chapter", "Section"
-#preset-german()   // "Kapitel", "Abschnitt"
+#preset-french()   // "Partie", "Chapitre", "Section"
+#preset-english()  // "Part", "Chapter", "Section"
+#preset-german()   // "Teil", "Kapitel", "Abschnitt"
 #preset-no-numbers()
 ```
 
@@ -211,6 +272,23 @@ A Typst package for creating beautiful, print-friendly title styles for document
 - Style showcase: `demo.typ` / `demo.pdf`
 
 ## Changelog
+
+### v0.2.6 — 2026-06-09
+
+#### Added
+- `part-fullpage: true` (new default): each part gets its own vertically and horizontally centred page, matching LaTeX's `\part` behavior — each style has its own coherent part renderer
+- `#part(fullpage: false)`: per-call override to use inline parts
+- `#part(image: ...)`: optional image on the part page (fullpage mode only)
+- `#part(image-caption: ...)`: caption rendered via Typst's native `figure`
+- `#part(image-position: "above"|"below")`: place image above or below the title (default: `"below"`)
+
+### v0.2.5 — 2026-06-09
+
+#### Added
+- `beautitled-ref` / `btl-ref`: cross-reference any labelled part, chapter, section, subsection, or subsubsection with a clickable, numbered link
+  - `show-page: true` appends a page number
+  - `short: true` shows the number without the prefix word (e.g. `1.1` instead of `Section 1.1`)
+  - Prefix words respect the active language preset
 
 ### v0.2.0
 

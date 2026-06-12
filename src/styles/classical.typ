@@ -5,6 +5,23 @@
 // ============================================================================
 
 #let style-classical = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #if show-num [
+          #text(size: 12pt, fill: secondary, tracking: 0.14em)[#upper(cfg.part-prefix) #numbering("I", num)]
+          #v(0.65em)
+        ]
+        #text(size: cfg.part-size, weight: "bold", fill: primary, tracking: 0.04em)[#smallcaps[#title]]
+        #v(0.5em)
+        #line(length: 28%, stroke: 0.5pt + secondary)
+      ]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color

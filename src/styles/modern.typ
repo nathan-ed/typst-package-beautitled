@@ -5,6 +5,21 @@
 // ============================================================================
 
 #let style-modern = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let accent = cfg.accent-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #if show-num [
+        #text(size: 12pt, fill: accent, weight: "bold", tracking: 0.12em)[#upper(cfg.part-prefix) #numbering("I", num)]
+        #v(0.35em)
+      ]
+      #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+      #v(0.35em)
+      #box(width: 72pt, height: 2.5pt, fill: accent)
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let accent = cfg.accent-color

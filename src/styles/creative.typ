@@ -5,6 +5,28 @@
 // ============================================================================
 
 #let style-creative = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let accent = cfg.accent-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #if show-num [
+        #text(size: 11pt, fill: accent, weight: "medium", tracking: 0.1em)[#upper(cfg.part-prefix) #numbering("I", num)]
+        #v(0.25em)
+      ]
+      #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+      #v(0.45em)
+      #grid(
+        columns: (auto, auto, auto, 1fr),
+        gutter: 0.35em,
+        circle(radius: 3pt, stroke: 1pt + accent),
+        circle(radius: 3pt, stroke: 1pt + primary),
+        circle(radius: 3pt, stroke: 1pt + cfg.secondary-color),
+        line(length: 100%, stroke: 0.8pt + accent),
+      )
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let accent = cfg.accent-color

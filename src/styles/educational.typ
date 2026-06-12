@@ -5,6 +5,21 @@
 // ============================================================================
 
 #let style-educational = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let accent = cfg.accent-color
+
+    block(width: 100%, above: 0pt, below: 0pt, stroke: (left: 5pt + accent), inset: (left: 1.2em, y: 0.5em))[
+      #if show-num [
+        #text(size: 42pt, weight: "bold", fill: accent.lighten(35%))[#numbering("I", num)]
+        #v(-0.35em)
+        #text(size: 10pt, weight: "bold", fill: accent, tracking: 0.14em)[#upper(cfg.part-prefix)]
+        #v(0.15em)
+      ]
+      #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let accent = cfg.accent-color
