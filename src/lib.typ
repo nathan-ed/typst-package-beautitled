@@ -276,7 +276,7 @@
 
     // Create outline entry for TOC/bookmarks
     let outline-title = if show-num {
-      [#cfg.chapter-prefix #num : #title]
+      [#cfg.chapter-prefix #num#if text.lang=="fr" [ ]: #title]
     } else {
       title
     }

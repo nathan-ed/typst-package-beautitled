@@ -20,7 +20,7 @@
     block(width: 100%, above: 0pt, below: 0pt)[
       #align(center)[
         #text(size: cfg.chapter-size, weight: "bold", fill: primary)[
-          #if show-num [#cfg.chapter-prefix #num : ]
+          #if show-num [#cfg.chapter-prefix #num#if text.lang=="fr" [ ]:] 
           #title
         ]
       ]
