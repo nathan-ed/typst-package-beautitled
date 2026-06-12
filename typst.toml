@@ -1,6 +1,6 @@
 [package]
 name = "beautitled"
-version = "0.2.0"
+version = "0.2.6"
 entrypoint = "src/lib.typ"
 authors = ["Nathan Scheinmann"]
 license = "MIT"

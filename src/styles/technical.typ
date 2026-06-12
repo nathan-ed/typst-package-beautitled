@@ -5,6 +5,21 @@
 // ============================================================================
 
 #let style-technical = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt, stroke: (left: 2pt + primary, bottom: 0.8pt + secondary), inset: (left: 1.1em, bottom: 0.65em, y: 0.6em))[
+      #if show-num [
+        #text(size: 9pt, fill: secondary, tracking: 0.14em)[#upper(cfg.part-prefix)]
+        #h(0.35em)
+        #text(size: 20pt, weight: "bold", fill: primary)[#numbering("I", num)]
+        #v(0.15em)
+      ]
+      #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color

@@ -5,6 +5,29 @@
 // ============================================================================
 
 #let style-vintage = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #text(size: 8pt, fill: secondary)[✦ ✦ ✦]
+        #v(0.55em)
+        #if show-num [
+          #text(size: 10pt, style: "italic", fill: secondary)[#cfg.part-prefix]
+          #v(0.25em)
+          #text(size: 38pt, fill: secondary.lighten(30%))[#numbering("I", num)]
+          #v(0.35em)
+        ]
+        #line(length: 7em, stroke: 0.5pt + secondary)
+        #v(0.45em)
+        #text(size: cfg.part-size, style: "italic", fill: primary)[#title]
+        #v(0.45em)
+        #text(size: 10pt, fill: secondary)[— ❦ —]
+      ]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color

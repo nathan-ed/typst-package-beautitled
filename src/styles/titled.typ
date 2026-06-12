@@ -8,6 +8,21 @@
 #let titled-chapter-info = state("titled-chapter-info", (num: none, title: none))
 
 #let style-titled = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt, stroke: 1pt + primary, inset: (x: 1.2em, y: 1em))[
+      #align(center)[
+        #if show-num [
+          #text(size: 10pt, weight: "regular", fill: secondary, tracking: 0.14em)[#upper(cfg.part-prefix) #numbering("I", num)]
+          #v(0.45em)
+        ]
+        #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+      ]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     // Store chapter info for section labels (both number and title)

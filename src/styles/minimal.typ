@@ -5,6 +5,21 @@
 // ============================================================================
 
 #let style-minimal = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #if show-num [
+          #text(size: 10pt, fill: secondary, tracking: 0.22em)[#upper(cfg.part-prefix) #numbering("I", num)]
+          #v(0.65em)
+        ]
+        #text(size: cfg.part-size, weight: "light", fill: primary)[#title]
+      ]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color

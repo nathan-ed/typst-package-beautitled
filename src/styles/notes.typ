@@ -5,6 +5,23 @@
 // ============================================================================
 
 #let style-notes = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #if show-num [
+        #text(size: 10pt, fill: secondary, tracking: 0.12em)[#upper(cfg.part-prefix) #numbering("I", num)]
+        #h(0.4em)
+        #text(fill: secondary)[|]
+        #h(0.4em)
+      ]
+      #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
+      #v(0.15em)
+      #line(length: 6em, stroke: 0.6pt + secondary)
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color

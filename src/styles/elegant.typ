@@ -5,6 +5,27 @@
 // ============================================================================
 
 #let style-elegant = (
+  part: (title, num, cfg, show-num) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+
+    block(width: 100%, above: 0pt, below: 0pt)[
+      #align(center)[
+        #text(size: 9pt, fill: secondary)[— ✦ ✦ —]
+        #v(0.7em)
+        #if show-num [
+          #text(size: 10pt, fill: secondary, tracking: 0.22em)[#smallcaps[#cfg.part-prefix]]
+          #h(0.35em)
+          #text(size: 34pt, fill: secondary.lighten(30%))[#numbering("I", num)]
+          #v(0.35em)
+        ]
+        #text(size: cfg.part-size, fill: primary, tracking: 0.05em)[#smallcaps[#title]]
+        #v(0.7em)
+        #text(size: 9pt, fill: secondary)[— ✦ ✦ —]
+      ]
+    ]
+  },
+
   chapter: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
