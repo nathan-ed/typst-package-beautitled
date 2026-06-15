@@ -302,6 +302,7 @@ look.
 - `beautitled-header(level: 1)` — new running-header function that returns the title of the most recent chapter (or section) for use in `#set page(header: ...)`, compatible with both `beautitled-init` and direct function calls
 - `colon-space()` helper exported for French typographic colon spacing (inserts a non-breaking space before `:` when `text.lang == "fr"`)
 - French colon spacing applied to part outline titles automatically
+- Custom heading numbering patterns via `numbering-pattern` parameter (e.g. `"1."`, `"A."`, `"I."`) — all 19 themes support per-call overrides through `beautitled-init` and direct heading functions
 
 #### Fixed
 - `numbered: false` no longer advances the display counter — unnumbered headings no longer cause gaps in subsequent numbered headings (occurrence counters still increment for correct page-break behavior)
