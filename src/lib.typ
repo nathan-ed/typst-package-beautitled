@@ -5,6 +5,7 @@
 // ============================================================================
 
 // Import all styles
+#import "typography.typ": colon-space
 #import "styles/titled.typ": style-titled
 #import "styles/classic.typ": style-classic
 #import "styles/modern.typ": style-modern
@@ -429,7 +430,7 @@
     let num = chapter-counter.get().first()
     let show-num = if numbered == auto { cfg.show-chapter-number } else { numbered }
 
-    let outline-title = if show-num { [#cfg.chapter-prefix #num : #title] } else { title }
+    let outline-title = if show-num { [#cfg.chapter-prefix #num#colon-space(): #title] } else { title }
     let outline-level = if cfg.enable-parts { 2 } else { 1 }
 
     // Page break before chapter if enabled

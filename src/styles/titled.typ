@@ -5,6 +5,8 @@
 // PRINT-FRIENDLY: thin strokes only
 // ============================================================================
 
+#import "../typography.typ": colon-space
+
 #let titled-chapter-info = state("titled-chapter-info", (num: none, title: none))
 
 #let style-titled = (
@@ -35,7 +37,7 @@
     block(width: 100%, above: 0pt, below: 0pt)[
       #align(center)[
         #text(size: cfg.chapter-size, weight: "bold", fill: primary)[
-          #if show-num [#cfg.chapter-prefix #num : ]
+          #if show-num [#cfg.chapter-prefix #num#colon-space(): ]
           #title
         ]
       ]
