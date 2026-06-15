@@ -253,6 +253,13 @@
 #let subsection-counter = counter("beautitled-subsection")
 #let subsubsection-counter = counter("beautitled-subsubsection")
 
+// Physical heading occurrence counters, including unnumbered headings.
+#let part-occurrence-counter = counter("beautitled-part-occurrence")
+#let chapter-occurrence-counter = counter("beautitled-chapter-occurrence")
+#let section-occurrence-counter = counter("beautitled-section-occurrence")
+#let subsection-occurrence-counter = counter("beautitled-subsection-occurrence")
+#let subsubsection-occurrence-counter = counter("beautitled-subsubsection-occurrence")
+
 // State to prevent show rule recursion
 #let _beautitled-internal = state("beautitled-internal", false)
 
@@ -266,6 +273,11 @@
   section-counter.update(0)
   subsection-counter.update(0)
   subsubsection-counter.update(0)
+  part-occurrence-counter.update(0)
+  chapter-occurrence-counter.update(0)
+  section-occurrence-counter.update(0)
+  subsection-occurrence-counter.update(0)
+  subsubsection-occurrence-counter.update(0)
 }
 
 // ============================================================================
@@ -279,6 +291,8 @@
     beautitled-styles.at("titled")
   }
 }
+
+#let _is-counted(numbered) = numbered != false
 
 // ============================================================================
 // Part Heading
@@ -317,11 +331,19 @@
     new.enable-parts = true
     new
   })
-  part-counter.step()
+  let counted = _is-counted(numbered)
+  if counted {
+    part-counter.step()
+  }
+  part-occurrence-counter.step()
   chapter-counter.update(0)
   section-counter.update(0)
   subsection-counter.update(0)
   subsubsection-counter.update(0)
+  chapter-occurrence-counter.update(0)
+  section-occurrence-counter.update(0)
+  subsection-occurrence-counter.update(0)
+  subsubsection-occurrence-counter.update(0)
 
   context {
     let cfg = beautitled-config.get()
@@ -369,7 +391,7 @@
       v(1fr)
       pagebreak(weak: true)
     } else {
-      if cfg.part-pagebreak and num > 1 {
+      if cfg.part-pagebreak and part-occurrence-counter.get().first() > 1 {
         pagebreak(weak: true)
       }
       v(cfg.part-above)
@@ -389,10 +411,17 @@
 // ============================================================================
 
 #let chapter(title, numbered: auto, label: none, from-init: false) = {
-  chapter-counter.step()
+  let counted = _is-counted(numbered)
+  if counted {
+    chapter-counter.step()
+  }
+  chapter-occurrence-counter.step()
   section-counter.update(0)
   subsection-counter.update(0)
   subsubsection-counter.update(0)
+  section-occurrence-counter.update(0)
+  subsection-occurrence-counter.update(0)
+  subsubsection-occurrence-counter.update(0)
 
   context {
     let cfg = beautitled-config.get()
@@ -404,7 +433,7 @@
     let outline-level = if cfg.enable-parts { 2 } else { 1 }
 
     // Page break before chapter if enabled
-    if cfg.chapter-pagebreak and num > 1 {
+    if cfg.chapter-pagebreak and chapter-occurrence-counter.get().first() > 1 {
       pagebreak(weak: true)
     }
 
@@ -433,9 +462,15 @@
 // ============================================================================
 
 #let section(title, numbered: auto, label: none, from-init: false) = {
-  section-counter.step()
+  let counted = _is-counted(numbered)
+  if counted {
+    section-counter.step()
+  }
+  section-occurrence-counter.step()
   subsection-counter.update(0)
   subsubsection-counter.update(0)
+  subsection-occurrence-counter.update(0)
+  subsubsection-occurrence-counter.update(0)
 
   context {
     let cfg = beautitled-config.get()
@@ -469,8 +504,13 @@
 // ============================================================================
 
 #let subsection(title, numbered: auto, label: none, from-init: false) = {
-  subsection-counter.step()
+  let counted = _is-counted(numbered)
+  if counted {
+    subsection-counter.step()
+  }
+  subsection-occurrence-counter.step()
   subsubsection-counter.update(0)
+  subsubsection-occurrence-counter.update(0)
 
   context {
     let cfg = beautitled-config.get()
@@ -502,7 +542,11 @@
 // ============================================================================
 
 #let subsubsection(title, numbered: auto, label: none, from-init: false) = {
-  subsubsection-counter.step()
+  let counted = _is-counted(numbered)
+  if counted {
+    subsubsection-counter.step()
+  }
+  subsubsection-occurrence-counter.step()
 
   context {
     let cfg = beautitled-config.get()
