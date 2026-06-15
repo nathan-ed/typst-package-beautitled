@@ -142,8 +142,8 @@
   toc-style: none,  // none = use same as style, or specify different style name
   toc-indent: 1em,
   toc-part-size: 14pt,
-  toc-chapter-size: 12pt,
-  toc-section-size: 11pt,
+  toc-chapter-size: 14pt,
+  toc-section-size: 11.5pt,
   toc-subsection-size: 10pt,
   toc-fill: repeat[.],
   toc-show-subsections: true,
@@ -400,29 +400,30 @@
     let num = chapter-counter.get().first()
     let show-num = if numbered == auto { cfg.show-chapter-number } else { numbered }
 
+    let outline-title = if show-num { [#cfg.chapter-prefix #num : #title] } else { title }
+    let outline-level = if cfg.enable-parts { 2 } else { 1 }
+
     // Page break before chapter if enabled
     if cfg.chapter-pagebreak and num > 1 {
       pagebreak(weak: true)
     }
 
-    v(cfg.chapter-above)
-
-    // Create outline entry for TOC/bookmarks
-    let outline-title = if show-num {
-      [#cfg.chapter-prefix #num : #title]
+    // When called from beautitled-init the heading goes in the normal content flow so
+    // that hydra and query() see it at the correct page position (top of the new page
+    // right after the break, before any spacing). When used standalone, place(hide[…])
+    // keeps it invisible and out of flow.
+    if from-init {
+      [#heading(level: outline-level, outlined: true, bookmarked: true, outline-title) <_btl-internal>]
     } else {
-      title
+      place(hide[#heading(level: outline-level, outlined: true, bookmarked: true, outline-title) <_btl-internal>])
     }
 
+    v(cfg.chapter-above)
     (style.chapter)(title, num, cfg, show-num)
 
-    // Register heading for outline without affecting layout (placed after content)
-    // The label marks this as internal to prevent show rule recursion
-    let outline-level = if cfg.enable-parts { 2 } else { 1 }
     if label != none {
       [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "chapter", show-num: show-num, title: title)) #label]
     }
-    place(hide[#heading(level: outline-level, outlined: true, bookmarked: true, outline-title) <_btl-internal>])
     v(cfg.chapter-below)
   }
 }
@@ -443,25 +444,22 @@
     let sec-num = section-counter.get().first()
     let show-num = if numbered == auto { cfg.show-section-number } else { numbered }
 
-    v(cfg.section-above)
-
-    // Create outline entry for TOC/bookmarks
     let outline-title = if show-num {
-      if ch-num > 0 {
-        [#str(ch-num)#_numsep#str(sec-num) #title]
-      } else {
-        [#str(sec-num). #title]
-      }
-    } else {
-      title
-    }
-
-    (style.section)(title, ch-num, sec-num, cfg, show-num)
+      if ch-num > 0 { [#str(ch-num)#_numsep#str(sec-num) #title] }
+      else { [#str(sec-num). #title] }
+    } else { title }
     let outline-level = if cfg.enable-parts { 3 } else { 2 }
+
+    if from-init {
+      [#heading(level: outline-level, outlined: true, bookmarked: true, outline-title) <_btl-internal>]
+    } else {
+      place(hide[#heading(level: outline-level, outlined: true, bookmarked: true, outline-title) <_btl-internal>])
+    }
+    v(cfg.section-above)
+    (style.section)(title, ch-num, sec-num, cfg, show-num)
     if label != none {
       [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "section", show-num: show-num, title: title)) #label]
     }
-    place(hide[#heading(level: outline-level, outlined: true, bookmarked: true, outline-title) <_btl-internal>])
     v(cfg.section-below)
   }
 }
@@ -482,21 +480,19 @@
     let subsec-num = subsection-counter.get().first()
     let show-num = if numbered == auto { cfg.show-subsection-number } else { numbered }
 
-    v(cfg.subsection-above)
-
-    // Create outline entry for TOC/bookmarks
-    let outline-title = if show-num {
-      [#str(sec-num)#_numsep#str(subsec-num) #title]
-    } else {
-      title
-    }
-
-    (style.subsection)(title, ch-num, sec-num, subsec-num, cfg, show-num)
+    let outline-title = if show-num { [#str(sec-num)#_numsep#str(subsec-num) #title] } else { title }
     let outline-level = if cfg.enable-parts { 4 } else { 3 }
+
+    if from-init {
+      [#heading(level: outline-level, outlined: cfg.toc-show-subsections, bookmarked: true, outline-title) <_btl-internal>]
+    } else {
+      place(hide[#heading(level: outline-level, outlined: cfg.toc-show-subsections, bookmarked: true, outline-title) <_btl-internal>])
+    }
+    v(cfg.subsection-above)
+    (style.subsection)(title, ch-num, sec-num, subsec-num, cfg, show-num)
     if label != none {
       [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "subsection", show-num: show-num, title: title)) #label]
     }
-    place(hide[#heading(level: outline-level, outlined: cfg.toc-show-subsections, bookmarked: true, outline-title) <_btl-internal>])
     v(cfg.subsection-below)
   }
 }
@@ -516,15 +512,17 @@
     let subsubsec-num = subsubsection-counter.get().first()
     let show-num = if numbered == auto { cfg.show-subsection-number } else { numbered }
 
-    v(cfg.subsection-above)
-
-    // Create outline entry for bookmarks
     let outline-title = if show-num {
       [#str(sec-num)#_numsep#str(subsec-num)#_numsep#str(subsubsec-num) #title]
-    } else {
-      title
-    }
+    } else { title }
+    let outline-level = if cfg.enable-parts { 5 } else { 4 }
 
+    if from-init {
+      [#heading(level: outline-level, outlined: false, bookmarked: true, outline-title) <_btl-internal>]
+    } else {
+      place(hide[#heading(level: outline-level, outlined: false, bookmarked: true, outline-title) <_btl-internal>])
+    }
+    v(cfg.subsection-above)
     if "subsubsection" in style {
       (style.subsubsection)(title, sec-num, subsec-num, subsubsec-num, cfg, show-num)
     } else {
@@ -533,11 +531,9 @@
         #title
       ]
     }
-    let outline-level = if cfg.enable-parts { 5 } else { 4 }
     if label != none {
       [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "subsubsection", show-num: show-num, title: title)) #label]
     }
-    place(hide[#heading(level: outline-level, outlined: false, bookmarked: true, outline-title) <_btl-internal>])
     v(cfg.subsection-below)
   }
 }
@@ -633,7 +629,7 @@
     (
       chapter: it => {
         block(above: 0.6em, stroke: (left: 2pt + cfg.accent-color), inset: (left: 0.5em))[
-          #text(size: cfg.toc-chapter-size, weight: "bold", fill: primary)[
+          #text(size: cfg.toc-chapter-size, weight: "black", fill: primary)[
             #link(it.element.location())[#it.element.body]
             #box(width: 1fr, cfg.toc-fill)
             #it.page()
@@ -642,7 +638,7 @@
       },
       section: it => {
         block(inset: (left: cfg.toc-indent))[
-          #text(size: cfg.toc-section-size, fill: primary)[
+          #text(size: cfg.toc-section-size, weight: "bold", fill: primary)[
             #link(it.element.location())[#it.element.body]
             #box(width: 1fr, cfg.toc-fill)
             #it.page()
@@ -651,7 +647,7 @@
       },
       subsection: it => {
         block(inset: (left: cfg.toc-indent * 2))[
-          #text(size: cfg.toc-subsection-size, fill: secondary)[
+          #text(size: cfg.toc-subsection-size, weight: "bold", fill: secondary)[
             #link(it.element.location())[#it.element.body]
             #box(width: 1fr, cfg.toc-fill)
             #it.page()
@@ -668,7 +664,7 @@
     (
       chapter: it => {
         block(above: 0.5em, below: 0.2em)[
-          #text(size: cfg.toc-chapter-size, weight: "bold", fill: primary)[
+          #text(size: cfg.toc-chapter-size, weight: "black", fill: primary)[
             #link(it.element.location())[#it.element.body]
             #box(width: 1fr, cfg.toc-fill)
             #it.page()
@@ -678,7 +674,7 @@
       },
       section: it => {
         block(inset: (left: cfg.toc-indent))[
-          #text(size: cfg.toc-section-size, fill: primary)[
+          #text(size: cfg.toc-section-size, weight: "bold", fill: primary)[
             #link(it.element.location())[#it.element.body]
             #box(width: 1fr, cfg.toc-fill)
             #it.page()
@@ -975,16 +971,33 @@
     v(1em)
   }
 
-  // Custom outline rendering based on style
-  if has-parts {
-    show outline.entry.where(level: 1): it => (toc-renderer.part)(it)
-    show outline.entry.where(level: 2): it => block(inset: (left: cfg.toc-indent))[(toc-renderer.chapter)(it)]
-    show outline.entry.where(level: 3): it => block(inset: (left: cfg.toc-indent))[(toc-renderer.section)(it)]
-    show outline.entry.where(level: 4): it => block(inset: (left: cfg.toc-indent))[(toc-renderer.subsection)(it)]
-  } else {
-    show outline.entry.where(level: 1): it => (toc-renderer.chapter)(it)
-    show outline.entry.where(level: 2): it => (toc-renderer.section)(it)
-    show outline.entry.where(level: 3): it => (toc-renderer.subsection)(it)
+  // Custom outline rendering based on style.
+  // Typst 0.14 does not reliably match outline.entry.where(level: ...),
+  // so branch on the entry level inside a single show rule.
+  show outline.entry: it => {
+    if has-parts {
+      if it.level == 1 {
+        (toc-renderer.part)(it)
+      } else if it.level == 2 {
+        block(inset: (left: cfg.toc-indent))[(toc-renderer.chapter)(it)]
+      } else if it.level == 3 {
+        block(inset: (left: cfg.toc-indent))[(toc-renderer.section)(it)]
+      } else if it.level == 4 {
+        block(inset: (left: cfg.toc-indent))[(toc-renderer.subsection)(it)]
+      } else {
+        it
+      }
+    } else {
+      if it.level == 1 {
+        (toc-renderer.chapter)(it)
+      } else if it.level == 2 {
+        (toc-renderer.section)(it)
+      } else if it.level == 3 {
+        (toc-renderer.subsection)(it)
+      } else {
+        it
+      }
+    }
   }
 
   outline(
@@ -995,15 +1008,50 @@
 }
 
 // ============================================================================
+// Running Header
+// ============================================================================
+
+/// Return the formatted title of the current chapter (or section) for use in a
+/// page header.  Works with both beautitled-init (native `= Heading` syntax) and
+/// direct beautitled function calls.
+///
+/// Parameters:
+///   level  - Logical heading level to display (1 = chapter, 2 = section, …)
+#let beautitled-header(level: 1) = context {
+  let cfg = beautitled-config.get()
+  let target-level = if cfg.enable-parts { level + 1 } else { level }
+  let current-page = here().page()
+  let candidates = query(heading.where(level: target-level, outlined: true)).filter(h =>
+    h.has("label") and str(h.label) == "_btl-internal" and h.location().page() <= current-page
+  )
+  if candidates.len() == 0 { [] }
+  else { candidates.last().body }
+}
+
+// ============================================================================
 // Show Rule Initialization
 // ============================================================================
 
 #let beautitled-init(doc) = {
-  // Transform native Typst headings to beautitled styled versions
-  // Skip headings that have the internal label (outline entries created by beautitled)
+  // Transform native Typst headings to beautitled styled versions.
+  //
+  // _btl-internal headings: emitted in-flow by beautitled functions (from-init:true)
+  // and are rendered as zero-size by returning [].
+  //
+  // Counter undo: Typst auto-increments counter(heading) for every heading element,
+  // including the original intercepted heading AND the _btl-internal one. We undo the
+  // first increment so only the _btl-internal heading counts (prevents doubled numbering).
+  //
+  // counter(heading) is a multi-level counter. Its update function receives the full
+  // counter state as separate positional arguments (one per active level). We must only
+  // decrement the component that matches the heading's level.
   show heading.where(level: 1): it => {
-    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      counter(heading).update((..args) => {
+        let v = args.pos()
+        (calc.max(0, v.at(0) - 1), ..v.slice(1))
+      })
       context {
         let cfg = beautitled-config.get()
         if cfg.enable-parts { part(it.body, from-init: true) }
@@ -1012,8 +1060,13 @@
     }
   }
   show heading.where(level: 2): it => {
-    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      counter(heading).update((..args) => {
+        let v = args.pos()
+        if v.len() < 2 { return v }
+        (v.at(0), calc.max(0, v.at(1) - 1), ..v.slice(2))
+      })
       context {
         let cfg = beautitled-config.get()
         if cfg.enable-parts { chapter(it.body, from-init: true) }
@@ -1022,8 +1075,13 @@
     }
   }
   show heading.where(level: 3): it => {
-    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      counter(heading).update((..args) => {
+        let v = args.pos()
+        if v.len() < 3 { return v }
+        (v.at(0), v.at(1), calc.max(0, v.at(2) - 1), ..v.slice(3))
+      })
       context {
         let cfg = beautitled-config.get()
         if cfg.enable-parts { section(it.body, from-init: true) }
@@ -1032,8 +1090,13 @@
     }
   }
   show heading.where(level: 4): it => {
-    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      counter(heading).update((..args) => {
+        let v = args.pos()
+        if v.len() < 4 { return v }
+        (v.at(0), v.at(1), v.at(2), calc.max(0, v.at(3) - 1), ..v.slice(4))
+      })
       context {
         let cfg = beautitled-config.get()
         if cfg.enable-parts { subsection(it.body, from-init: true) }
@@ -1042,12 +1105,18 @@
     }
   }
   show heading.where(level: 5): it => {
-    if it.has("label") and str(it.label) == "_btl-internal" { it }
+    if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
       context {
         let cfg = beautitled-config.get()
-        if cfg.enable-parts { subsubsection(it.body, from-init: true) }
-        else { it }
+        if cfg.enable-parts {
+          counter(heading).update((..args) => {
+            let v = args.pos()
+            if v.len() < 5 { return v }
+            (v.at(0), v.at(1), v.at(2), v.at(3), calc.max(0, v.at(4) - 1), ..v.slice(5))
+          })
+          subsubsection(it.body, from-init: true)
+        } else { it }
       }
     }
   }
