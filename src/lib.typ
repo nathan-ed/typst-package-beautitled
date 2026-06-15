@@ -354,7 +354,7 @@
     let use-fullpage = if fullpage == auto { cfg.part-fullpage } else { fullpage }
 
     let outline-title = if show-num {
-      [#cfg.part-prefix #numbering("I", num) : #title]
+      [#cfg.part-prefix #numbering("I", num)#colon-space(): #title]
     } else {
       title
     }
