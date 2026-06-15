@@ -4,6 +4,8 @@
 // PRINT-FRIENDLY: minimal ink, clear hierarchy
 // ============================================================================
 
+#import "../typography.typ": part-number, chapter-number, section-number, subsection-number, subsubsection-number
+
 #let style-creative = (
   part: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
@@ -11,7 +13,7 @@
 
     block(width: 100%, above: 0pt, below: 0pt)[
       #if show-num [
-        #text(size: 11pt, fill: accent, weight: "medium", tracking: 0.1em)[#upper(cfg.part-prefix) #numbering("I", num)]
+        #text(size: 11pt, fill: accent, weight: "medium", tracking: 0.1em)[#upper(cfg.part-prefix) #part-number(num, cfg)]
         #v(0.25em)
       ]
       #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
@@ -33,7 +35,7 @@
 
     block(width: 100%, above: 0pt, below: 0pt)[
       #if show-num [
-        #text(size: 10pt, fill: accent, weight: "medium")[#cfg.chapter-prefix #num]
+        #text(size: 10pt, fill: accent, weight: "medium")[#cfg.chapter-prefix #chapter-number(num, cfg)]
         #v(0.2em)
       ]
       #text(size: cfg.chapter-size, weight: "bold", fill: primary)[#title]
@@ -60,7 +62,7 @@
         #if show-num [
           #circle(radius: 10pt, stroke: 1.5pt + accent)[
             #align(center + horizon)[
-              #text(size: 10pt, weight: "bold", fill: accent)[#sec-num]
+              #text(size: 10pt, weight: "bold", fill: accent)[#section-number(ch-num, sec-num, cfg, fallback: [#sec-num])]
             ]
           ]
         ] else [
@@ -86,18 +88,18 @@
       box(width: 8pt, height: 2pt, stroke: 0.8pt + cfg.accent-color),
       box(width: 4pt, height: 2pt, stroke: 0.8pt + secondary),
       text(size: cfg.subsection-size, weight: "semibold", fill: primary)[
-        #if show-num [#text(fill: secondary)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)]#h(0.3em)]
+        #if show-num [#text(fill: secondary)[#subsection-number(ch-num, sec-num, subsec-num, cfg, fallback: [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)])]#h(0.3em)]
         #title
       ],
     )
   },
 
-  subsubsection: (title, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
+  subsubsection: (title, ch-num, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
     text(size: cfg.subsubsection-size, fill: primary)[
       #text(fill: cfg.accent-color)[→]#h(0.2em)
-      #if show-num [#text(fill: secondary)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)]#h(0.2em)]
+      #if show-num [#text(fill: secondary)[#subsubsection-number(ch-num, sec-num, subsec-num, subsubsec-num, cfg, fallback: [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)])]#h(0.2em)]
       #text(weight: "medium")[#title]
     ]
   },

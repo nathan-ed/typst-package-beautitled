@@ -5,7 +5,7 @@
 // ============================================================================
 
 // Import all styles
-#import "typography.typ": colon-space
+#import "typography.typ": colon-space, part-number, chapter-number, section-number, subsection-number, subsubsection-number
 #import "styles/titled.typ": style-titled
 #import "styles/classic.typ": style-classic
 #import "styles/modern.typ": style-modern
@@ -117,6 +117,11 @@
   show-section-number: true,
   show-subsection-number: true,
   show-chapter-in-section: true,  // Show "Ch. X : Title" in section labels (titled style)
+  part-numbering: auto,
+  chapter-numbering: auto,
+  section-numbering: auto,
+  subsection-numbering: auto,
+  subsubsection-numbering: auto,
 
   // Prefixes (localization)
   part-prefix: "Partie",
@@ -173,6 +178,11 @@
   show-section-number: none,
   show-subsection-number: none,
   show-chapter-in-section: none,
+  part-numbering: none,
+  chapter-numbering: none,
+  section-numbering: none,
+  subsection-numbering: none,
+  subsubsection-numbering: none,
   part-prefix: none,
   chapter-prefix: none,
   section-prefix: none,
@@ -217,6 +227,11 @@
     if show-chapter-in-section != none { new.show-chapter-in-section = show-chapter-in-section }
     if show-section-number != none { new.show-section-number = show-section-number }
     if show-subsection-number != none { new.show-subsection-number = show-subsection-number }
+    if part-numbering != none { new.part-numbering = part-numbering }
+    if chapter-numbering != none { new.chapter-numbering = chapter-numbering }
+    if section-numbering != none { new.section-numbering = section-numbering }
+    if subsection-numbering != none { new.subsection-numbering = subsection-numbering }
+    if subsubsection-numbering != none { new.subsubsection-numbering = subsubsection-numbering }
     if part-prefix != none { new.part-prefix = part-prefix }
     if chapter-prefix != none { new.chapter-prefix = chapter-prefix }
     if section-prefix != none { new.section-prefix = section-prefix }
@@ -307,7 +322,7 @@
   block(width: 100%, above: 0pt, below: 0pt)[
     #align(center)[
       #if show-num [
-        #text(size: 12pt, weight: "bold", fill: accent, tracking: 0.12em)[#upper(cfg.part-prefix) #numbering("I", num)]
+        #text(size: 12pt, weight: "bold", fill: accent, tracking: 0.12em)[#upper(cfg.part-prefix) #part-number(num, cfg)]
         #v(0.45em)
       ]
       #text(size: cfg.part-size, weight: "bold", fill: primary)[#title]
@@ -354,7 +369,7 @@
     let use-fullpage = if fullpage == auto { cfg.part-fullpage } else { fullpage }
 
     let outline-title = if show-num {
-      [#cfg.part-prefix #numbering("I", num)#colon-space(): #title]
+      [#cfg.part-prefix #part-number(num, cfg)#colon-space(): #title]
     } else {
       title
     }
@@ -430,7 +445,7 @@
     let num = chapter-counter.get().first()
     let show-num = if numbered == auto { cfg.show-chapter-number } else { numbered }
 
-    let outline-title = if show-num { [#cfg.chapter-prefix #num#colon-space(): #title] } else { title }
+    let outline-title = if show-num { [#cfg.chapter-prefix #chapter-number(num, cfg)#colon-space(): #title] } else { title }
     let outline-level = if cfg.enable-parts { 2 } else { 1 }
 
     // Page break before chapter if enabled
@@ -481,8 +496,8 @@
     let show-num = if numbered == auto { cfg.show-section-number } else { numbered }
 
     let outline-title = if show-num {
-      if ch-num > 0 { [#str(ch-num)#_numsep#str(sec-num) #title] }
-      else { [#str(sec-num). #title] }
+      if ch-num > 0 { [#section-number(ch-num, sec-num, cfg, fallback: [#str(ch-num)#_numsep#str(sec-num)]) #title] }
+      else { [#section-number(ch-num, sec-num, cfg, fallback: [#str(sec-num).]) #title] }
     } else { title }
     let outline-level = if cfg.enable-parts { 3 } else { 2 }
 
@@ -521,7 +536,9 @@
     let subsec-num = subsection-counter.get().first()
     let show-num = if numbered == auto { cfg.show-subsection-number } else { numbered }
 
-    let outline-title = if show-num { [#str(sec-num)#_numsep#str(subsec-num) #title] } else { title }
+    let outline-title = if show-num {
+      [#subsection-number(ch-num, sec-num, subsec-num, cfg, fallback: [#str(sec-num)#_numsep#str(subsec-num)]) #title]
+    } else { title }
     let outline-level = if cfg.enable-parts { 4 } else { 3 }
 
     if from-init {
@@ -552,13 +569,14 @@
   context {
     let cfg = beautitled-config.get()
     let style = get-style-renderer(cfg.style)
+    let ch-num = chapter-counter.get().first()
     let sec-num = section-counter.get().first()
     let subsec-num = subsection-counter.get().first()
     let subsubsec-num = subsubsection-counter.get().first()
     let show-num = if numbered == auto { cfg.show-subsection-number } else { numbered }
 
     let outline-title = if show-num {
-      [#str(sec-num)#_numsep#str(subsec-num)#_numsep#str(subsubsec-num) #title]
+      [#subsubsection-number(ch-num, sec-num, subsec-num, subsubsec-num, cfg, fallback: [#str(sec-num)#_numsep#str(subsec-num)#_numsep#str(subsubsec-num)]) #title]
     } else { title }
     let outline-level = if cfg.enable-parts { 5 } else { 4 }
 
@@ -569,10 +587,10 @@
     }
     v(cfg.subsection-above)
     if "subsubsection" in style {
-      (style.subsubsection)(title, sec-num, subsec-num, subsubsec-num, cfg, show-num)
+      (style.subsubsection)(title, ch-num, sec-num, subsec-num, subsubsec-num, cfg, show-num)
     } else {
       text(weight: "semibold", size: 10pt)[
-        #if show-num [#str(sec-num)#_numsep#str(subsec-num)#_numsep#str(subsubsec-num) #h(0.4em)]
+        #if show-num [#subsubsection-number(ch-num, sec-num, subsec-num, subsubsec-num, cfg, fallback: [#str(sec-num)#_numsep#str(subsec-num)#_numsep#str(subsubsec-num)]) #h(0.4em)]
         #title
       ]
     }
@@ -623,26 +641,30 @@
       info.title
     } else if env-type == "part" {
       let n = part-counter.at(target).first()
-      if short { [#numbering("I", n)] }
-      else { [#cfg.part-prefix #numbering("I", n)] }
+      let num = part-number(n, cfg)
+      if short { num }
+      else { [#cfg.part-prefix #num] }
     } else if env-type == "chapter" {
       let n = chapter-counter.at(target).first()
-      if short { [#n] }
-      else { [#cfg.chapter-prefix #n] }
+      let num = chapter-number(n, cfg)
+      if short { num }
+      else { [#cfg.chapter-prefix #num] }
     } else if env-type == "section" {
       let ch = chapter-counter.at(target).first()
       let sec = section-counter.at(target).first()
-      let num = if ch > 0 { [#str(ch)#_numsep#str(sec)] } else { [#str(sec)] }
+      let num = section-number(ch, sec, cfg, fallback: if ch > 0 { [#str(ch)#_numsep#str(sec)] } else { [#str(sec)] })
       if short { num } else { [#cfg.section-prefix #num] }
     } else if env-type == "subsection" {
+      let ch = chapter-counter.at(target).first()
       let sec = section-counter.at(target).first()
       let sub = subsection-counter.at(target).first()
-      [#str(sec)#_numsep#str(sub)]
+      subsection-number(ch, sec, sub, cfg, fallback: [#str(sec)#_numsep#str(sub)])
     } else if env-type == "subsubsection" {
+      let ch = chapter-counter.at(target).first()
       let sec = section-counter.at(target).first()
       let sub = subsection-counter.at(target).first()
       let subsub = subsubsection-counter.at(target).first()
-      [#str(sec)#_numsep#str(sub)#_numsep#str(subsub)]
+      subsubsection-number(ch, sec, sub, subsub, cfg, fallback: [#str(sec)#_numsep#str(sub)#_numsep#str(subsub)])
     } else {
       [??]
     }

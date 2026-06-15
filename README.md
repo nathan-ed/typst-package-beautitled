@@ -191,6 +191,11 @@ LaTeX's default behavior. Every style has its own coherent part renderer.
   show-section-number: true,
   show-subsection-number: true,
   show-chapter-in-section: true,
+  part-numbering: auto,         // auto keeps the style default; or use "I", "A", ...
+  chapter-numbering: auto,
+  section-numbering: auto,      // e.g. "1.1"
+  subsection-numbering: auto,   // e.g. "1.1.a"
+  subsubsection-numbering: auto,
 
   // Prefixes (localization)
   part-prefix: "Partie",
@@ -209,6 +214,24 @@ LaTeX's default behavior. Every style has its own coherent part renderer.
   toc-fill: repeat[.],
 )
 ```
+
+### Custom numbering patterns
+
+Use Typst numbering patterns to override the rendered numbers while keeping
+beautitled's counters, table of contents, and `beautitled-ref` in sync.
+
+```typst
+#beautitled-setup(
+  part-numbering: "A",
+  chapter-numbering: "I",
+  section-numbering: "I.1",
+  subsection-numbering: "I.1.a",
+  subsubsection-numbering: "I.1.a.i",
+)
+```
+
+The default value is `auto`, which preserves each style's existing numbering
+look.
 
 ## Table of Contents
 

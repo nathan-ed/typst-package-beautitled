@@ -4,6 +4,8 @@
 // PRINT-FRIENDLY: text ornaments only
 // ============================================================================
 
+#import "../typography.typ": part-number, chapter-number, section-number, subsection-number, subsubsection-number
+
 #let style-vintage = (
   part: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
@@ -16,7 +18,7 @@
         #if show-num [
           #text(size: 10pt, style: "italic", fill: secondary)[#cfg.part-prefix]
           #v(0.25em)
-          #text(size: 38pt, fill: secondary.lighten(30%))[#numbering("I", num)]
+          #text(size: 38pt, fill: secondary.lighten(30%))[#part-number(num, cfg)]
           #v(0.35em)
         ]
         #line(length: 7em, stroke: 0.5pt + secondary)
@@ -39,7 +41,7 @@
         #if show-num [
           #text(size: 10pt, style: "italic", fill: secondary)[#cfg.chapter-prefix]
           #v(0.2em)
-          #text(size: 32pt, fill: secondary.lighten(30%))[#numbering("I", num)]
+          #text(size: 32pt, fill: secondary.lighten(30%))[#chapter-number(num, cfg, fallback: [#numbering("I", num)])]
           #v(0.3em)
         ]
         #line(length: 6em, stroke: 0.4pt + secondary)
@@ -60,7 +62,7 @@
         #text(size: 8pt, fill: secondary)[§]
         #h(0.2em)
         #if show-num [
-          #text(size: 10pt, fill: secondary)[#numbering("I", sec-num).]
+          #text(size: 10pt, fill: secondary)[#section-number(ch-num, sec-num, cfg, fallback: [#numbering("I", sec-num).])]
           #h(0.3em)
         ]
         #text(size: cfg.section-size, style: "italic", fill: primary)[#title]
@@ -76,18 +78,18 @@
 
     text(fill: primary)[
       #text(size: 8pt, fill: secondary)[❧]#h(0.3em)
-      #if show-num [#text(size: 10pt, style: "italic", fill: secondary)[#numbering("i", subsec-num).]#h(0.2em)]
+      #if show-num [#text(size: 10pt, style: "italic", fill: secondary)[#subsection-number(ch-num, sec-num, subsec-num, cfg, fallback: [#numbering("i", subsec-num).])]#h(0.2em)]
       #text(size: cfg.subsection-size, style: "italic")[#title]
     ]
   },
 
-  subsubsection: (title, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
+  subsubsection: (title, ch-num, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
     pad(left: 1em)[
       #text(size: cfg.subsubsection-size, style: "italic", fill: primary)[
-        #if show-num [#text(fill: secondary)[(#numbering("a", subsubsec-num))]#h(0.2em)]
+        #if show-num [#text(fill: secondary)[(#subsubsection-number(ch-num, sec-num, subsec-num, subsubsec-num, cfg, fallback: [#numbering("a", subsubsec-num)]))]#h(0.2em)]
         #title
       ]
     ]

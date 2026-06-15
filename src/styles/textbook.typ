@@ -4,6 +4,8 @@
 // PRINT-FRIENDLY: accent color used sparingly
 // ============================================================================
 
+#import "../typography.typ": part-number, chapter-number, section-number, subsection-number, subsubsection-number
+
 #let style-textbook = (
   part: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
@@ -16,7 +18,7 @@
         align: (right + top, left + top),
         [
           #if show-num [
-            #text(size: 56pt, weight: "bold", fill: accent.lighten(60%))[#numbering("I", num)]
+            #text(size: 56pt, weight: "bold", fill: accent.lighten(60%))[#part-number(num, cfg)]
           ]
         ],
         [
@@ -43,7 +45,7 @@
         align: (right + top, left + top),
         [
           #if show-num [
-            #text(size: 48pt, weight: "bold", fill: accent.lighten(60%))[#num]
+            #text(size: 48pt, weight: "bold", fill: accent.lighten(60%))[#chapter-number(num, cfg)]
           ]
         ],
         [
@@ -64,7 +66,7 @@
     let accent = cfg.accent-color
 
     text(size: cfg.section-size, weight: "bold", fill: primary)[
-      #if show-num [#text(fill: accent)[#sec-num]#h(0.6em)]
+      #if show-num [#text(fill: accent)[#section-number(ch-num, sec-num, cfg, fallback: [#sec-num])]#h(0.6em)]
       #title
     ]
   },
@@ -74,17 +76,17 @@
     let secondary = cfg.secondary-color
 
     text(size: cfg.subsection-size, weight: "bold", fill: primary)[
-      #if show-num [#text(fill: secondary)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)]#h(0.5em)]
+      #if show-num [#text(fill: secondary)[#subsection-number(ch-num, sec-num, subsec-num, cfg, fallback: [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)])]#h(0.5em)]
       #title
     ]
   },
 
-  subsubsection: (title, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
+  subsubsection: (title, ch-num, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
     let primary = cfg.primary-color
     let secondary = cfg.secondary-color
 
     text(size: cfg.subsubsection-size, weight: "semibold", fill: primary)[
-      #if show-num [#text(fill: secondary)[#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)]#h(0.4em)]
+      #if show-num [#text(fill: secondary)[#subsubsection-number(ch-num, sec-num, subsec-num, subsubsec-num, cfg, fallback: [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)])]#h(0.4em)]
       #title
     ]
   },

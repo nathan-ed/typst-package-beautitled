@@ -165,6 +165,11 @@ All configuration is done through the `beautitled-setup` function. You can call 
   [`show-section-number`], [`true`], [Show section numbers],
   [`show-subsection-number`], [`true`], [Show subsection numbers],
   [`show-chapter-in-section`], [`true`], [Show chapter info in section labels (titled style)],
+  [`part-numbering`], [`auto`], [Typst numbering pattern for parts, or `auto` for the style default],
+  [`chapter-numbering`], [`auto`], [Typst numbering pattern for chapters, or `auto` for the style default],
+  [`section-numbering`], [`auto`], [Typst numbering pattern for sections, or `auto` for the style default],
+  [`subsection-numbering`], [`auto`], [Typst numbering pattern for subsections, or `auto` for the style default],
+  [`subsubsection-numbering`], [`auto`], [Typst numbering pattern for subsubsections, or `auto` for the style default],
 
   // Prefixes
   [`part-prefix`], [`"Partie"`], [Text before part number],
@@ -185,6 +190,24 @@ All configuration is done through the `beautitled-setup` function. You can call 
   [`chapter-pagebreak`], [`false`], [Page break before chapters after the first],
   [`toc-part-size`], [`14pt`], [Font size for part entries in the table of contents],
 )
+
+== Custom Numbering Patterns
+
+Set `*-numbering` options to Typst numbering patterns. `auto` preserves the
+selected style's default number rendering.
+
+```typst
+#beautitled-setup(
+  part-numbering: "A",
+  chapter-numbering: "I",
+  section-numbering: "I.1",
+  subsection-numbering: "I.1.a",
+  subsubsection-numbering: "I.1.a.i",
+)
+```
+
+The same rendered numbers are used in headings, the table of contents, and
+`beautitled-ref`.
 
 // ============================================================================
 = Available Styles

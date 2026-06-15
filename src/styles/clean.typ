@@ -4,12 +4,14 @@
 // PRINT-FRIENDLY: minimal ink, pure text
 // ============================================================================
 
+#import "../typography.typ": part-number, chapter-number, section-number, subsection-number, subsubsection-number
+
 #let style-clean = (
   part: (title, num, cfg, show-num) => {
     let primary = cfg.primary-color
 
     text(size: cfg.part-size, weight: "bold", fill: primary)[
-      #if show-num [#cfg.part-prefix #numbering("I", num). #h(0.5em)]
+      #if show-num [#cfg.part-prefix #part-number(num, cfg). #h(0.5em)]
       #title
     ]
   },
@@ -18,7 +20,7 @@
     let primary = cfg.primary-color
 
     text(size: cfg.chapter-size, weight: "bold", fill: primary)[
-      #if show-num [#num.#h(0.5em)]
+      #if show-num [#chapter-number(num, cfg).#h(0.5em)]
       #title
     ]
   },
@@ -27,7 +29,7 @@
     let primary = cfg.primary-color
 
     text(size: cfg.section-size, weight: "bold", fill: primary)[
-      #if show-num [#sec-num.#h(0.5em)]
+      #if show-num [#section-number(ch-num, sec-num, cfg, fallback: [#sec-num.])#h(0.5em)]
       #title
     ]
   },
@@ -36,16 +38,16 @@
     let primary = cfg.primary-color
 
     text(size: cfg.subsection-size, weight: "semibold", fill: primary)[
-      #if show-num [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#h(0.5em)]
+      #if show-num [#subsection-number(ch-num, sec-num, subsec-num, cfg, fallback: [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)])#h(0.5em)]
       #title
     ]
   },
 
-  subsubsection: (title, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
+  subsubsection: (title, ch-num, sec-num, subsec-num, subsubsec-num, cfg, show-num) => {
     let primary = cfg.primary-color
 
     text(size: cfg.subsubsection-size, weight: "medium", fill: primary)[
-      #if show-num [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)#h(0.4em)]
+      #if show-num [#subsubsection-number(ch-num, sec-num, subsec-num, subsubsec-num, cfg, fallback: [#str(sec-num)#"\u{2060}.\u{2060}"#str(subsec-num)#"\u{2060}.\u{2060}"#str(subsubsec-num)])#h(0.4em)]
       #title
     ]
   },
