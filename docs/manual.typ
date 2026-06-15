@@ -1,6 +1,6 @@
 // beautitled - User Manual
 // ============================================================================
-#import "@preview/beautitled:0.2.6": *
+#import "@preview/beautitled:0.2.7": *
 
 #set page(margin: 2.5cm)
 #set text(font: "Linux Libertine", size: 11pt)
@@ -18,7 +18,7 @@
   #v(0.5em)
   #text(size: 16pt, fill: gray)[User Manual]
   #v(0.3em)
-  #text(size: 11pt, fill: gray)[Version 0.2.6]
+  #text(size: 11pt, fill: gray)[Version 0.2.7]
   #v(0.5em)
   #text(size: 11pt)[Nathan Scheinmann]
 ]
@@ -51,13 +51,13 @@
 == Installation
 
 ```typst
-#import "@preview/beautitled:0.2.6": *
+#import "@preview/beautitled:0.2.7": *
 ```
 
 == Basic Usage
 
 ```typst
-#import "@preview/beautitled:0.2.6": *
+#import "@preview/beautitled:0.2.7": *
 
 #beautitled-setup(style: "titled")
 #show: beautitled-init
@@ -526,7 +526,7 @@ beautitled includes several presets for common configurations. Presets are calle
 == Complete Example
 
 ```typst
-#import "@preview/beautitled:0.2.6": *
+#import "@preview/beautitled:0.2.7": *
 
 // 1. Choose a style
 #beautitled-setup(style: "scholarly")
@@ -565,6 +565,101 @@ beautitled includes several presets for common configurations. Presets are calle
 ```
 
 // ============================================================================
+= Running Headers
+
+`beautitled-header` returns the formatted title of the most recent chapter (or
+section, depending on `level`) for use in a page header.  It works with both
+the `beautitled-init` show-rule approach (native `= Heading` syntax) and direct
+function calls (`#chapter[...]`, `#section[...]`, etc.).
+
+== Basic Usage
+
+```typst
+#set page(header: context [
+  #beautitled-header(level: 1)  // show current chapter title
+  #h(1fr)
+  #counter(page).display()
+])
+```
+
+== Parameters
+
+#table(
+  columns: (auto, auto, auto, 1fr),
+  inset: 8pt,
+  stroke: 0.4pt + gray,
+  fill: (col, row) => if row == 0 { luma(230) } else { none },
+  [*Parameter*], [*Type*], [*Default*], [*Description*],
+  [`level`], [`int`], [`1`], [Logical heading level: `1` = chapter, `2` = section, etc. Automatically adjusts when `enable-parts: true`.],
+)
+
+== Notes
+
+- Returns `[]` (empty content) if no matching heading has appeared on or before the current page — safe to use from page 1.
+- When `enable-parts: true`, the internal heading levels are shifted by one, so `level: 1` still means "chapter" from the caller's perspective.
+- The returned title matches the outline title (includes numbering prefix).
+
+// ============================================================================
+= Unnumbered Headings
+
+Any heading function accepts `numbered: false` to suppress both the display
+number and its increment from the display counter.  The heading still appears
+in the document, the outline, and bookmarks — it simply has no number.
+
+== Behavior in 0.2.7
+
+Before 0.2.7, calling `#chapter(numbered: false)[Preface]` would skip the
+display number but still advance the internal display counter, so the next
+numbered chapter would jump from e.g. Chapter 1 to Chapter 3.  Since 0.2.7,
+the display counter is *not* incremented for unnumbered headings.
+
+The *occurrence counter* (used for page-break logic) is always incremented,
+so automatic page breaks still fire correctly even for unnumbered headings.
+
+== Example
+
+```typst
+#chapter(numbered: false)[Preface]   // no number, counter stays at 0
+#chapter[Introduction]               // displays as "Chapter 1"
+#chapter[Methods]                    // displays as "Chapter 2"
+```
+
+== With `beautitled-init`
+
+Native headings can be made unnumbered with `heading(numbering: none)`:
+
+```typst
+#show: beautitled-init
+
+#heading(level: 1, numbering: none)[Preface]   // unnumbered chapter
+= Introduction                                  // Chapter 1
+```
+
+Note: when using the show-rule approach the `numbered` parameter is controlled
+by the native heading's `numbering` field rather than a `numbered:` argument.
+
+// ============================================================================
+= French Colon Spacing
+
+beautitled includes a `colon-space()` helper that inserts a non-breaking space
+before a colon when the document language is French (`text.lang == "fr"`), and
+nothing otherwise.  This is used automatically in heading labels and outline
+titles; you do not normally need to call it directly.
+
+The helper is exported from the package for cases where you want consistent
+colon spacing in your own content:
+
+```typst
+#import "@preview/beautitled:0.2.7": colon-space
+
+Question#colon-space(): Why?
+```
+
+When `lang: "fr"` is set via `#set text(lang: "fr")`, this renders as
+"Question : Why?" (with the required typographic thin-space before the colon).
+In all other languages it renders as "Question: Why?" (no extra space).
+
+// ============================================================================
 = Tips and Best Practices
 
 == Choosing a Style
@@ -589,6 +684,12 @@ beautitled works well with other Typst packages. Just make sure to call `beautit
 
 // ============================================================================
 = Changelog
+
+== Version 0.2.7
+- New `beautitled-header(level:)` function for running page headers
+- `numbered: false` no longer advances the display counter (unnumbered headings are truly unnumbered)
+- `colon-space()` helper exported for French typographic colon spacing
+- French colon spacing applied to part outline titles
 
 == Version 0.2.0
 - Initial release

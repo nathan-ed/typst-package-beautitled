@@ -1,5 +1,5 @@
 // Gallery renders for heading styles
-#import "@preview/beautitled:0.2.6": *
+#import "@preview/beautitled:0.2.7": *
 
 #set page(width: 16cm, height: 16cm, margin: 0.9cm)
 #set text(font: "Linux Libertine", size: 10pt)

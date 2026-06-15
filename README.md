@@ -19,7 +19,7 @@ A Typst package for creating beautiful, print-friendly title styles for document
 ## Quick Start
 
 ```typst
-#import "@preview/beautitled:0.2.6": *
+#import "@preview/beautitled:0.2.7": *
 
 #beautitled-setup(style: "titled")
 #show: beautitled-init
@@ -272,6 +272,17 @@ LaTeX's default behavior. Every style has its own coherent part renderer.
 - Style showcase: `demo.typ` / `demo.pdf`
 
 ## Changelog
+
+### [0.2.7] - 2026-06-15
+
+#### Added
+- `beautitled-header(level: 1)` — new running-header function that returns the title of the most recent chapter (or section) for use in `#set page(header: ...)`, compatible with both `beautitled-init` and direct function calls
+- `colon-space()` helper exported for French typographic colon spacing (inserts a non-breaking space before `:` when `text.lang == "fr"`)
+- French colon spacing applied to part outline titles automatically
+
+#### Fixed
+- `numbered: false` no longer advances the display counter — unnumbered headings no longer cause gaps in subsequent numbered headings (occurrence counters still increment for correct page-break behavior)
+- `beautitled-init` counter undo corrected for multi-level counters — prevents doubled numbering when using native `= Heading` syntax
 
 ### v0.2.6 — 2026-06-09
 

@@ -1,5 +1,5 @@
 // Gallery renders for TOC styles
-#import "@preview/beautitled:0.2.6": *
+#import "@preview/beautitled:0.2.7": *
 
 #set page(width: 10cm, height: 6.5cm, margin: 0.6cm)
 #set text(font: "Linux Libertine", size: 10pt)

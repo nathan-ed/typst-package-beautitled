@@ -1,5 +1,5 @@
 // Gallery: full-page part styles across four representative styles
-#import "@preview/beautitled:0.2.6": *
+#import "@preview/beautitled:0.2.7": *
 
 #set page(width: 10cm, height: 14cm, margin: 1.5cm)
 #set text(font: "Linux Libertine", size: 10pt)
