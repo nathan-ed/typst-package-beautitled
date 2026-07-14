@@ -1,7 +1,7 @@
 # beautitled
 
 [![beautitled on Typst Universe](https://img.shields.io/badge/Typst_Universe-v._0.3.0-239dad?labelColor=eee)](https://typst.app/universe/package/beautitled)
-[![Full package manual as PDF](https://img.shields.io/badge/Manual-pdf-333333?labelColor=eee)](https://github.com/nathan-ed/typst-package-beautitled/blob/PLACEHOLDER_SHA/docs/manual.pdf)
+[![Full package manual as PDF](https://img.shields.io/badge/Manual-pdf-333333?labelColor=eee)](https://github.com/nathan-ed/typst-package-beautitled/blob/7e64f98d858c8c31286a146969570de63288f137/docs/manual.pdf)
 [![Distributed under the MIT license](https://img.shields.io/badge/License-MIT-333333?labelColor=eee)](LICENSE)
 
 Sleek, print-friendly heading styles for chapters, sections, parts, and tables of contents. Perfect for textbooks, course materials, academic papers, and any document that needs professional heading styles.
