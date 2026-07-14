@@ -4,6 +4,16 @@
   if text.lang == "fr" { [#"\u{00a0}"] } else { [] }
 }
 
+// Apply the optional heading face without forcing users to configure one.
+// Newer styles use this helper so their display typography can be changed
+// independently while legacy renderers keep their exact output.
+#let heading-face(cfg, body) = {
+  if cfg.at("heading-font", default: none) != none {
+    set text(font: cfg.heading-font)
+  }
+  body
+}
+
 #let _number-with(pattern, fallback, ..values) = {
   if pattern == auto {
     fallback

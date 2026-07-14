@@ -1,5 +1,5 @@
 // Gallery renders for TOC styles
-#import "@preview/beautitled:0.2.7": *
+#import "@preview/beautitled:0.3.0": *
 
 #set page(width: 10cm, height: 6.5cm, margin: 0.6cm)
 #set text(font: "Linux Libertine", size: 10pt)
@@ -11,7 +11,65 @@
   let fill = repeat[.]
   let indent = 1em
 
-  if style-name == "titled" {
+  if style-name == "anchor" {
+    block(stroke: (left: 1.6pt + accent, bottom: 0.4pt + secondary.lighten(40%)), inset: (left: 0.7em, y: 0.25em))[
+      #grid(
+        columns: (1fr, 2.1em),
+        align: (left + horizon, center + horizon),
+        text(size: 11pt, weight: "semibold", fill: primary)[Chapter 1: Introduction],
+        box(width: 1.9em, height: 1.9em, radius: 999pt, stroke: 0.7pt + accent, align(center + horizon)[#text(fill: accent)[1]]),
+      )
+    ]
+    block(stroke: (left: 0.5pt + secondary.lighten(40%)), inset: (left: indent + 0.7em, y: 0.12em))[
+      #text(size: 10pt, fill: primary)[1.1 Context #h(1fr) #text(fill: secondary)[1]]
+    ]
+  } else if style-name == "terrace" {
+    block[
+      #grid(
+        columns: (2.4em, 1fr, 2em),
+        gutter: 0.6em,
+        align: (right + horizon, left + horizon, right + horizon),
+        line(length: 100%, stroke: 1.3pt + accent),
+        text(size: 11pt, weight: "semibold", fill: primary)[Chapter 1: Introduction],
+        text(size: 11pt, fill: secondary)[1],
+      )
+      #v(0.2em)
+      #grid(
+        columns: (2.4em, 1fr),
+        gutter: 0.6em,
+        line(length: 100%, stroke: 1.3pt + accent),
+        line(length: 100%, stroke: 0.4pt + secondary.lighten(40%)),
+      )
+    ]
+    block[
+      #grid(
+        columns: (2.4em, 1fr, 2em),
+        gutter: 0.6em,
+        [],
+        text(size: 10pt, fill: primary)[1.1 Context],
+        text(size: 10pt, fill: secondary)[1],
+      )
+    ]
+  } else if style-name == "folio" {
+    block[
+      #grid(
+        columns: (1fr, 2.5em),
+        gutter: 0.8em,
+        text(size: 11pt, weight: "medium", fill: primary)[Chapter 1: Introduction],
+        text(size: 12pt, weight: "light", fill: accent)[1],
+      )
+      #v(0.2em)
+      #line(length: 100%, stroke: 0.4pt + secondary.lighten(35%))
+    ]
+    block(inset: (left: indent))[
+      #grid(
+        columns: (1fr, 2.5em),
+        gutter: 0.8em,
+        text(size: 10pt, fill: primary)[1.1 Context],
+        text(size: 10pt, fill: secondary)[1],
+      )
+    ]
+  } else if style-name == "titled" {
     block(stroke: (left: 2pt + accent), inset: (left: 0.5em))[
       #text(size: 11pt, weight: "bold", fill: primary)[Chapter 1 : Introduction #box(width: 1fr, fill) 1]
     ]
@@ -101,3 +159,9 @@
 #render("scholarly")
 #pagebreak()
 #render("simple")
+#pagebreak()
+#render("folio")
+#pagebreak()
+#render("terrace")
+#pagebreak()
+#render("anchor")

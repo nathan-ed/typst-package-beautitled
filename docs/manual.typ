@@ -1,13 +1,13 @@
 // beautitled - User Manual
 // ============================================================================
-#import "@preview/beautitled:0.2.7": *
+#import "@preview/beautitled:0.3.0": *
 
 #set page(margin: 2.5cm)
 #set text(font: "Linux Libertine", size: 11pt)
 #set par(justify: true)
 
 #beautitled-setup(
-  style: "modern",
+  style: "anchor",
   chapter-prefix: "Chapter",
   section-prefix: "Section",
 )
@@ -18,7 +18,7 @@
   #v(0.5em)
   #text(size: 16pt, fill: gray)[User Manual]
   #v(0.3em)
-  #text(size: 11pt, fill: gray)[Version 0.2.7]
+  #text(size: 11pt, fill: gray)[Version 0.3.0]
   #v(0.5em)
   #text(size: 11pt)[Nathan Scheinmann]
 ]
@@ -32,11 +32,12 @@
 // ============================================================================
 = Introduction
 
-*beautitled* is a Typst package that provides 19 beautiful, print-friendly title styles for documents. It is designed for educational materials, academic papers, textbooks, and any document that needs professional heading styles.
+*beautitled* is a Typst package that provides 22 beautiful, print-friendly title styles for documents. Three next-generation styles offer a calmer, sleeker direction while all 19 original renderers remain available unchanged.
 
 == Features
 
-- *19 distinctive styles* - From classic academic to modern creative
+- *3 next-generation styles* - A focused contemporary collection for new documents
+- *19 legacy styles* - Existing style names and rendering remain compatible
 - *Print-friendly* - All styles use minimal ink (no heavy backgrounds)
 - *Fully configurable* - Colors, sizes, spacing, and numbering
 - *Multilingual* - Customizable prefixes for any language
@@ -51,15 +52,15 @@
 == Installation
 
 ```typst
-#import "@preview/beautitled:0.2.7": *
+#import "@preview/beautitled:0.3.0": *
 ```
 
 == Basic Usage
 
 ```typst
-#import "@preview/beautitled:0.2.7": *
+#import "@preview/beautitled:0.3.0": *
 
-#beautitled-setup(style: "titled")
+#beautitled-setup(style: "anchor")
 #show: beautitled-init
 
 = My Chapter Title
@@ -214,10 +215,28 @@ The same rendered numbers are used in headings, the table of contents, and
 
 == Style Categories
 
-=== Original
+=== Next Generation (Recommended)
+- *folio* - Quiet contemporary editorial typography
+- *terrace* - Tight number-and-title grid with generous top spacing
+- *anchor* - One axis and one rail bind the label-number tag to the title
+
+`terrace` and `anchor` include curated vertical-spacing profiles and start
+chapters on a new page by default. Explicit spacing and page-break settings
+still override the profile.
+
+These styles also honor `heading-font`, allowing display typography to be
+changed independently from the body font:
+
+```typst
+#beautitled-setup(style: "anchor", heading-font: "Your Sans Font")
+```
+
+=== Legacy Collection (Unchanged)
+
+==== Original
 - *titled* - Boxed sections with floating labels showing chapter info (DEFAULT)
 
-=== General Purpose
+==== General Purpose
 - *classic* - Traditional academic with underlines
 - *modern* - Clean geometric with accent colors
 - *elegant* - Refined with decorative ornaments
@@ -226,12 +245,12 @@ The same rendered numbers are used in headings, the table of contents, and
 - *minimal* - Ultra-clean with maximum whitespace
 - *vintage* - Classic book ornamental style
 
-=== Educational
+==== Educational
 - *schoolbook* - Textbook style for lessons
 - *notes* - Course notes and study materials
 - *clean* - Maximum simplicity
 
-=== Academic
+==== Academic
 - *technical* - Engineering documentation style
 - *academic* - Professional academic with underlined chapters
 - *textbook* - Bold numbers with clear hierarchy
@@ -409,18 +428,38 @@ These options can be set via `beautitled-setup`:
   [*Parameter*], [*Default*], [*Description*],
   [`toc-style`], [`none`], [Different style for TOC (overrides heading style)],
   [`toc-indent`], [`1em`], [Indentation per level],
-  [`toc-chapter-size`], [`12pt`], [Font size for chapters in TOC],
-  [`toc-section-size`], [`11pt`], [Font size for sections in TOC],
+  [`toc-part-size`], [`14pt`], [Font size for parts in TOC],
+  [`toc-chapter-size`], [`14pt`], [Font size for chapters in TOC],
+  [`toc-section-size`], [`11.5pt`], [Font size for sections in TOC],
   [`toc-subsection-size`], [`10pt`], [Font size for subsections in TOC],
   [`toc-fill`], [`repeat[.]`], [Fill between title and page number],
   [`toc-show-subsections`], [`true`], [Include subsections in TOC],
 )
 
-== Available TOC Styles (8)
+== Available TOC Styles (11)
+
+The next-generation TOCs are complete page systems: *folio* uses an editorial
+measure and a fixed folio column, *terrace* uses a strict leader-free grid, and
+*anchor* keeps each chapter and its children attached to a common visual rail.
 
 #grid(
   columns: (1fr, 1fr),
   gutter: 1em,
+  [
+    #text(size: 9pt, weight: "bold")[folio]
+    #v(0.3em)
+    #image("/gallery/toc/toc-folio.png", width: 100%)
+  ],
+  [
+    #text(size: 9pt, weight: "bold")[terrace] #text(size: 8pt, fill: gray)[spacing-first]
+    #v(0.3em)
+    #image("/gallery/toc/toc-terrace.png", width: 100%)
+  ],
+  [
+    #text(size: 9pt, weight: "bold")[anchor] #text(size: 8pt, fill: gray)[clarity-first]
+    #v(0.3em)
+    #image("/gallery/toc/toc-anchor.png", width: 100%)
+  ],
   [
     #text(size: 9pt, weight: "bold")[titled] #text(size: 8pt, fill: gray)[(default)]
     #v(0.3em)
@@ -549,7 +588,7 @@ beautitled includes several presets for common configurations. Presets are calle
 == Complete Example
 
 ```typst
-#import "@preview/beautitled:0.2.7": *
+#import "@preview/beautitled:0.3.0": *
 
 // 1. Choose a style
 #beautitled-setup(style: "scholarly")
@@ -673,7 +712,7 @@ The helper is exported from the package for cases where you want consistent
 colon spacing in your own content:
 
 ```typst
-#import "@preview/beautitled:0.2.7": colon-space
+#import "@preview/beautitled:0.3.0": colon-space
 
 Question#colon-space(): Why?
 ```
@@ -687,6 +726,9 @@ In all other languages it renders as "Question: Why?" (no extra space).
 
 == Choosing a Style
 
+- *For lower, more deliberate chapter openings:* `terrace`, `anchor`
+- *For the clearest label-number-title grouping:* `anchor`
+- *For contemporary books and essays:* `folio`
 - *For math/science textbooks:* `titled`, `schoolbook`, `textbook`, `academic`
 - *For course notes:* `notes`, `clean`, `minimal`
 - *For formal academic papers:* `scholarly`, `classical`, `academic`
@@ -705,8 +747,19 @@ All styles are designed to be print-friendly:
 
 beautitled works well with other Typst packages. Just make sure to call `beautitled-setup` after importing the package.
 
+beautitled keeps the native `counter(heading)` synchronized with its internal counters, so packages that read the heading counter (theorem numbering, exercise-bank's `number-prefix: "heading"`, running headers) work without configuration, in both native `= Heading` mode and direct function-call mode. Without parts, the first component of `counter(heading)` is the chapter number; with `enable-parts: true` it is the part number (the chapter comes second) --- packages reading only the first component should use the exported `chapter-counter` in that case.
+
 // ============================================================================
 = Changelog
+
+== Version 0.3.0
+- Added three next-generation styles: `folio`, `terrace`, and `anchor`
+- Added spacing-aware chapter-opening profiles for `terrace` and `anchor`
+- Added matching part and table-of-contents rendering for each new style
+- Added separate `beautitled-next-styles` and `beautitled-legacy-styles` registries
+- New styles honor the existing `heading-font` configuration
+- Native `counter(heading)` is now kept in sync with the internal counters (previously it stayed at zero), for interoperability with heading-counter consumers
+- Kept all 19 legacy renderers and the `titled` default unchanged
 
 == Version 0.2.7
 - New `beautitled-header(level:)` function for running page headers
@@ -731,13 +784,16 @@ beautitled works well with other Typst packages. Just make sure to call `beautit
 #align(center)[
   #text(size: 24pt, weight: "bold")[Style Showcase]
   #v(0.3em)
-  #text(size: 11pt, fill: gray)[All 19 available styles]
+  #text(size: 11pt, fill: gray)[3 next-generation + 19 legacy styles]
 ]
 #v(1em)
 
 #grid(
   columns: (1fr, 1fr, 1fr),
   gutter: 1em,
+  [#text(size: 9pt, weight: "bold")[folio] #v(0.3em) #image("/gallery/styles/folio.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[terrace] #text(size: 8pt, fill: gray)[spacing-first] #v(0.3em) #image("/gallery/styles/terrace.png", width: 100%)],
+  [#text(size: 9pt, weight: "bold")[anchor] #text(size: 8pt, fill: gray)[clarity-first] #v(0.3em) #image("/gallery/styles/anchor.png", width: 100%)],
   [#text(size: 9pt, weight: "bold")[titled] #v(0.3em) #image("/gallery/styles/titled.png", width: 100%)],
   [#text(size: 9pt, weight: "bold")[classic] #v(0.3em) #image("/gallery/styles/classic.png", width: 100%)],
   [#text(size: 9pt, weight: "bold")[modern] #v(0.3em) #image("/gallery/styles/modern.png", width: 100%)],

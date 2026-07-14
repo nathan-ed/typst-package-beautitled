@@ -1,10 +1,15 @@
 # beautitled
 
-A Typst package for creating beautiful, print-friendly title styles for documents. Perfect for textbooks, course materials, academic papers, and any document that needs professional heading styles.
+[![beautitled on Typst Universe](https://img.shields.io/badge/Typst_Universe-v._0.3.0-239dad?labelColor=eee)](https://typst.app/universe/package/beautitled)
+[![Full package manual as PDF](https://img.shields.io/badge/Manual-pdf-333333?labelColor=eee)](https://github.com/nathan-ed/typst-package-beautitled/blob/PLACEHOLDER_SHA/docs/manual.pdf)
+[![Distributed under the MIT license](https://img.shields.io/badge/License-MIT-333333?labelColor=eee)](LICENSE)
+
+Sleek, print-friendly heading styles for chapters, sections, parts, and tables of contents. Perfect for textbooks, course materials, academic papers, and any document that needs professional heading styles.
 
 ## Features
 
-- **19 distinctive styles** - From classic academic to modern creative
+- **3 next-generation styles** - A focused, sleeker collection for new documents
+- **19 legacy styles** - Every existing style remains available with unchanged rendering
 - **Print-friendly** - All styles use minimal ink (no heavy backgrounds)
 - **Fully configurable** - Colors, sizes, spacing, and numbering
 - **Styled Table of Contents** - Each style has a matching TOC design
@@ -14,14 +19,12 @@ A Typst package for creating beautiful, print-friendly title styles for document
 - **Native Typst support** - Works with `= Heading` syntax
 - **Cross-references** - `beautitled-ref` for labelled heading refs with optional page numbers
 
-**[View the full manual (PDF)](https://github.com/nathan-ed/typst-package-beautitled/blob/db6bf5b51ac9346ba4cc0ff55c55575472c25a9d/docs/manual.pdf)**
-
 ## Quick Start
 
 ```typst
-#import "@preview/beautitled:0.2.7": *
+#import "@preview/beautitled:0.3.0": *
 
-#beautitled-setup(style: "titled")
+#beautitled-setup(style: "anchor")
 #show: beautitled-init
 
 = My Chapter Title
@@ -71,11 +74,39 @@ LaTeX's default behavior. Every style has its own coherent part renderer.
 ==== Arithmetic
 ```
 
-## Available Styles (19)
+## Available Styles (22)
+
+### Next-generation collection
+
+These are the recommended choices for new documents. They use calmer
+typographic contrast, tighter alignment, finer rules, and less decoration.
+
+| Style | Best for | Character |
+|-------|----------|-----------|
+| `folio` | Essays, books, academic writing | Quiet contemporary editorial typography |
+| `terrace` | Reports and course books | Number and title coupled in a tight, lower-set grid |
+| `anchor` | Maximum clarity | One axis and one rail bind the label-number tag directly to the title |
+
+`terrace` and `anchor` include curated vertical-spacing profiles and start
+chapters on a new page by default. Passing explicit
+`chapter-above`, `section-above`, or `chapter-pagebreak` values still wins.
+
+The optional `heading-font` setting is especially effective with these styles:
+
+```typst
+#beautitled-setup(
+  style: "anchor",
+  heading-font: "Your Sans Font",
+)
+```
+
+### Legacy collection (unchanged)
+
+The original 19 style names and renderers are retained for output compatibility.
 
 | Category | Style | Description |
 |----------|-------|-------------|
-| **Original** | `titled` | Boxed sections with floating labels (DEFAULT) |
+| **Original** | `titled` | Boxed sections with floating labels (legacy default) |
 | **General** | `classic` | Traditional with underlines |
 | | `modern` | Clean geometric with accent |
 | | `elegant` | Refined with ornaments |
@@ -98,6 +129,11 @@ LaTeX's default behavior. Every style has its own coherent part renderer.
 ## Style Gallery
 
 <table>
+  <tr>
+    <td align="center"><img src="gallery/styles/folio.png" width="220" alt="folio style: restrained editorial hierarchy with an oversized chapter number"><br><strong>folio</strong></td>
+    <td align="center"><img src="gallery/styles/terrace.png" width="220" alt="terrace style: lower-set chapter number and title in a tight two-column grid"><br><strong>terrace</strong><br><em>spacing-first</em></td>
+    <td align="center"><img src="gallery/styles/anchor.png" width="220" alt="anchor style: lower-set chapter label number and title bound by a thin vertical rail"><br><strong>anchor</strong><br><em>clarity-first</em></td>
+  </tr>
   <tr>
     <td align="center"><img src="gallery/styles/titled.png" width="220" alt="titled style: chapter heading with boxed floating label"><br><strong>titled</strong></td>
     <td align="center"><img src="gallery/styles/classic.png" width="220" alt="classic style: traditional heading with underline"><br><strong>classic</strong></td>
@@ -139,6 +175,12 @@ LaTeX's default behavior. Every style has its own coherent part renderer.
 
 <table>
   <tr>
+    <td align="center"><img src="gallery/parts/parts-folio.png" width="160" alt="folio style full-page part with restrained editorial typography"><br><strong>folio</strong></td>
+    <td align="center"><img src="gallery/parts/parts-terrace.png" width="160" alt="terrace style full-page part with a tightly coupled number and title"><br><strong>terrace</strong></td>
+    <td align="center"><img src="gallery/parts/parts-anchor.png" width="160" alt="anchor style full-page part with a grouped label number and title beside a fine rail"><br><strong>anchor</strong></td>
+    <td></td>
+  </tr>
+  <tr>
     <td align="center"><img src="gallery/parts/parts-1.png" width="160" alt="modern style full-page part page with accent bar and title centred"><br><strong>modern</strong></td>
     <td align="center"><img src="gallery/parts/parts-2.png" width="160" alt="elegant style full-page part page with ornamental rules and small caps"><br><strong>elegant</strong></td>
     <td align="center"><img src="gallery/parts/parts-3.png" width="160" alt="titled style full-page part page with boxed border"><br><strong>titled</strong></td>
@@ -149,6 +191,12 @@ LaTeX's default behavior. Every style has its own coherent part renderer.
 ## TOC Style Gallery
 
 <table>
+  <tr>
+    <td align="center"><img src="gallery/toc/toc-folio.png" width="200" alt="Table of contents in folio style with restrained editorial rules and a fixed page column"><br><strong>folio</strong></td>
+    <td align="center"><img src="gallery/toc/toc-terrace.png" width="200" alt="Table of contents in terrace style using a strict leader-free alignment grid"><br><strong>terrace</strong></td>
+    <td align="center"><img src="gallery/toc/toc-anchor.png" width="200" alt="Table of contents in anchor style with railed chapter groups and circled page markers"><br><strong>anchor</strong></td>
+    <td></td>
+  </tr>
   <tr>
     <td align="center"><img src="gallery/toc/toc-titled.png" width="200" alt="Table of contents in titled style with floating chapter labels"><br><strong>titled</strong></td>
     <td align="center"><img src="gallery/toc/toc-classic.png" width="200" alt="Table of contents in classic style with dot leaders"><br><strong>classic</strong></td>
@@ -233,6 +281,23 @@ beautitled's counters, table of contents, and `beautitled-ref` in sync.
 The default value is `auto`, which preserves each style's existing numbering
 look.
 
+### Interoperability: native `counter(heading)`
+
+beautitled keeps Typst's built-in `counter(heading)` synchronized with its own
+counters (part, chapter, section, ...). Packages that read the heading counter —
+theorem numbering, exercise numbering (e.g. exercise-bank's
+`number-prefix: "heading"`), running headers — therefore work out of the box,
+in both native `= Heading` mode and direct function-call mode:
+
+```typst
+#context counter(heading).get()   // e.g. (2, 1) in chapter 1 of part 2
+```
+
+Without parts, the first component is the chapter number. With
+`enable-parts: true`, it is the part number and the chapter comes second — a
+package that only reads the first component should use beautitled's exported
+`chapter-counter` instead.
+
 ## Table of Contents
 
 ```typst
@@ -245,6 +310,10 @@ look.
 // Different style for TOC
 #beautitled-toc(title: "Index", style: "elegant")
 ```
+
+The new TOC systems deliberately solve different reading problems: `folio`
+uses a fixed page-number column, `terrace` replaces leaders with a strict grid,
+and `anchor` visually binds every chapter to its sections.
 
 ### Mix Heading and TOC Styles
 
@@ -289,12 +358,21 @@ look.
 #theme-coral()   // Red
 ```
 
-## Manual & Demo
-
-- Full manual: `manual.typ` / `manual.pdf`
-- Style showcase: `demo.typ` / `demo.pdf`
-
 ## Changelog
+
+### [0.3.0] - 2026-07-14
+
+#### Added
+- Three opt-in next-generation styles: `folio`, `terrace`, and `anchor`
+- Spacing-aware chapter-opening profiles for `terrace` and `anchor`; explicit spacing settings remain authoritative
+- Matching part and table-of-contents renderers for all three styles
+- Exported `beautitled-next-styles` and `beautitled-legacy-styles` registries
+- New styles honor `heading-font` without changing legacy renderer output
+- Native `counter(heading)` is now kept in sync with beautitled's internal counters (previously it stayed at zero), so heading-counter consumers — theorem packages, exercise-bank's `number-prefix: "heading"`, running headers — work without configuration
+
+#### Compatibility
+- All 19 existing style names still resolve to their original renderer
+- The default remains `titled`; existing documents do not change unless they opt in
 
 ### [0.2.7] - 2026-06-15
 

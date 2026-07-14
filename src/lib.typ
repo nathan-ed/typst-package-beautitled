@@ -5,7 +5,7 @@
 // ============================================================================
 
 // Import all styles
-#import "typography.typ": colon-space, part-number, chapter-number, section-number, subsection-number, subsubsection-number
+#import "typography.typ": heading-face, colon-space, part-number, chapter-number, section-number, subsection-number, subsubsection-number
 #import "styles/titled.typ": style-titled
 #import "styles/classic.typ": style-classic
 #import "styles/modern.typ": style-modern
@@ -25,12 +25,20 @@
 #import "styles/classical.typ": style-classical
 #import "styles/educational.typ": style-educational
 #import "styles/structured.typ": style-structured
+#import "styles/folio.typ": style-folio
+#import "styles/terrace.typ": style-terrace
+#import "styles/anchor.typ": style-anchor
 
 // ============================================================================
-// Available Styles Reference (19 styles)
+// Available Styles Reference (22 styles)
 // ============================================================================
 //
-// ORIGINAL:
+// NEXT GENERATION:
+//   folio       - Quiet contemporary editorial
+//   terrace     - Tight number-and-title grid with generous top spacing
+//   anchor      - Clarity-first common-region rail and compact tag
+//
+// LEGACY / ORIGINAL:
 //   titled      - Boxed sections with floating labels (default)
 //
 // GENERAL PURPOSE:
@@ -59,8 +67,9 @@
 //
 // ============================================================================
 
-// Style registry
-#let beautitled-styles = (
+// The original registry is exported separately so compatibility-sensitive
+// documents can explicitly restrict style choices to the unchanged collection.
+#let beautitled-legacy-styles = (
   // Original
   titled: style-titled,
   // General
@@ -84,6 +93,64 @@
   educational: style-educational,
   structured: style-structured,
   magazine: style-magazine,
+)
+
+#let beautitled-next-styles = (
+  folio: style-folio,
+  terrace: style-terrace,
+  anchor: style-anchor,
+)
+
+// Complete style registry. Existing keys still point to their original
+// renderers; the next-generation collection is strictly additive.
+#let beautitled-styles = (
+  // Next generation
+  folio: style-folio,
+  terrace: style-terrace,
+  anchor: style-anchor,
+  // Legacy / original
+  titled: style-titled,
+  classic: style-classic,
+  modern: style-modern,
+  elegant: style-elegant,
+  bold: style-bold,
+  creative: style-creative,
+  minimal: style-minimal,
+  vintage: style-vintage,
+  schoolbook: style-schoolbook,
+  notes: style-notes,
+  clean: style-clean,
+  technical: style-technical,
+  academic: style-academic,
+  textbook: style-textbook,
+  scholarly: style-scholarly,
+  classical: style-classical,
+  educational: style-educational,
+  structured: style-structured,
+  magazine: style-magazine,
+)
+
+// Spacing is part of the design for these lower-set chapter-opening styles.
+// Explicit values passed to beautitled-setup are applied afterwards and win.
+#let beautitled-spacing-profiles = (
+  terrace: (
+    chapter-above: 5.5em,
+    chapter-below: 1.35em,
+    section-above: 1.4em,
+    section-below: 0.65em,
+    subsection-above: 1em,
+    subsection-below: 0.5em,
+    chapter-pagebreak: true,
+  ),
+  anchor: (
+    chapter-above: 6em,
+    chapter-below: 1.6em,
+    section-above: 1.55em,
+    section-below: 0.7em,
+    subsection-above: 1.05em,
+    subsection-below: 0.5em,
+    chapter-pagebreak: true,
+  ),
 )
 
 // ============================================================================
@@ -209,7 +276,19 @@
 ) = {
   beautitled-config.update(cfg => {
     let new = cfg
-    if style != none { new.style = style }
+    if style != none {
+      new.style = style
+      if style in beautitled-spacing-profiles {
+        let profile = beautitled-spacing-profiles.at(style)
+        new.chapter-above = profile.chapter-above
+        new.chapter-below = profile.chapter-below
+        new.section-above = profile.section-above
+        new.section-below = profile.section-below
+        new.subsection-above = profile.subsection-above
+        new.subsection-below = profile.subsection-below
+        new.chapter-pagebreak = profile.chapter-pagebreak
+      }
+    }
     if primary-color != none { new.primary-color = primary-color }
     if secondary-color != none { new.secondary-color = secondary-color }
     if accent-color != none { new.accent-color = accent-color }
@@ -309,6 +388,29 @@
 }
 
 #let _is-counted(numbered) = numbered != false
+
+// Mirror the internal counters into Typst's native counter(heading).
+// The show-rule interception (init mode) and the internal outline headings
+// leave counter(heading) at arbitrary values, so packages that read it —
+// theorem numbering, exercise-bank's number-prefix, running headers... —
+// would see garbage. Emitted at the end of every heading function, after the
+// internal heading element, so it always has the last word.
+#let _sync-heading-counter() = context {
+  let cfg = beautitled-config.get()
+  let vals = ()
+  if cfg.enable-parts {
+    vals.push(part-counter.get().first())
+  }
+  vals.push(chapter-counter.get().first())
+  vals.push(section-counter.get().first())
+  vals.push(subsection-counter.get().first())
+  vals.push(subsubsection-counter.get().first())
+  // Native heading states don't carry trailing zero levels
+  while vals.len() > 1 and vals.last() == 0 {
+    vals = vals.slice(0, vals.len() - 1)
+  }
+  counter(heading).update((..args) => vals)
+}
 
 // ============================================================================
 // Part Heading
@@ -419,6 +521,7 @@
       meta-and-heading
       v(cfg.part-below)
     }
+    _sync-heading-counter()
   }
 }
 
@@ -470,6 +573,7 @@
       [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "chapter", show-num: show-num, title: title)) #label]
     }
     v(cfg.chapter-below)
+    _sync-heading-counter()
   }
 }
 
@@ -512,6 +616,7 @@
       [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "section", show-num: show-num, title: title)) #label]
     }
     v(cfg.section-below)
+    _sync-heading-counter()
   }
 }
 
@@ -552,6 +657,7 @@
       [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "subsection", show-num: show-num, title: title)) #label]
     }
     v(cfg.subsection-below)
+    _sync-heading-counter()
   }
 }
 
@@ -598,6 +704,7 @@
       [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "subsubsection", show-num: show-num, title: title)) #label]
     }
     v(cfg.subsection-below)
+    _sync-heading-counter()
   }
 }
 
@@ -689,6 +796,281 @@
 // TOC style renderers - each matches its corresponding heading style
 // Using block with above/below spacing instead of v() to avoid overlap issues
 #let toc-styles = (
+  // Folio style — bookish editorial measure with a fixed folio column
+  folio: (cfg) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+    let accent = cfg.accent-color
+    (
+      title: (title, alignment) => {
+        heading-face(cfg)[
+          #block(width: 100%, below: 1.35em)[
+            #line(length: 100%, stroke: 0.45pt + secondary.lighten(34%))
+            #v(0.62em)
+            #align(alignment)[
+              #text(size: cfg.chapter-size + 4pt, weight: "regular", fill: primary)[#title]
+            ]
+            #v(0.58em)
+            #line(length: 100%, stroke: 0.85pt + primary)
+          ]
+        ]
+      },
+      body: body => heading-face(cfg)[#body],
+      part: it => {
+        block(above: 1.2em, below: 0.5em)[
+          #grid(
+            columns: (1fr, 2.7em),
+            gutter: 0.9em,
+            align: (left + bottom, right + bottom),
+            text(size: cfg.toc-part-size, weight: "medium", fill: primary, tracking: 0.06em)[
+              #link(it.element.location())[#smallcaps[#it.element.body]]
+            ],
+            text(size: cfg.toc-part-size, weight: "light", fill: accent)[#it.page()],
+          )
+          #v(0.3em)
+          #line(length: 100%, stroke: 0.65pt + primary)
+        ]
+      },
+      chapter: it => {
+        block(above: 0.82em, below: 0.2em)[
+          #grid(
+            columns: (1fr, 2.7em),
+            gutter: 0.9em,
+            align: (left + bottom, right + bottom),
+            text(size: cfg.toc-chapter-size, weight: "medium", fill: primary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-chapter-size + 1pt, weight: "light", fill: accent)[#it.page()],
+          )
+          #v(0.26em)
+          #line(length: 100%, stroke: 0.4pt + secondary.lighten(34%))
+        ]
+      },
+      section: it => {
+        block(above: 0.2em, below: 0.1em, inset: (left: cfg.toc-indent))[
+          #grid(
+            columns: (1fr, 2.7em),
+            gutter: 0.9em,
+            align: (left + horizon, right + horizon),
+            text(size: cfg.toc-section-size, fill: primary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-section-size, fill: secondary)[#it.page()],
+          )
+        ]
+      },
+      subsection: it => {
+        block(above: 0.1em, below: 0.12em, inset: (left: cfg.toc-indent * 2))[
+          #text(size: cfg.toc-subsection-size, style: "italic", fill: secondary)[
+            #link(it.element.location())[#it.element.body]
+            #h(1fr)#it.page()
+          ]
+        ]
+      },
+    )
+  },
+
+  // Terrace style — one explicit Swiss grid, shared by title and every level
+  terrace: (cfg) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+    let accent = cfg.accent-color
+    (
+      title: (title, alignment) => {
+        heading-face(cfg)[
+          #block(width: 100%, below: 1.25em)[
+            #grid(
+              columns: (2.65em, 1fr, 2.35em),
+              gutter: 0.65em,
+              align: (right + bottom, left + bottom, right + bottom),
+              line(length: 100%, stroke: 1.35pt + accent),
+              align(alignment)[
+                #text(size: cfg.chapter-size + 3pt, weight: "semibold", fill: primary)[#title]
+              ],
+              [],
+            )
+            #v(0.48em)
+            #grid(
+              columns: (2.65em, 1fr),
+              gutter: 0.65em,
+              line(length: 100%, stroke: 1.35pt + accent),
+              line(length: 100%, stroke: 0.45pt + secondary.lighten(38%)),
+            )
+          ]
+        ]
+      },
+      body: body => heading-face(cfg)[#body],
+      part: it => {
+        block(above: 1.15em, below: 0.42em)[
+          #grid(
+            columns: (2.65em, 1fr, 2.35em),
+            gutter: 0.65em,
+            align: (right + horizon, left + horizon, right + horizon),
+            line(length: 100%, stroke: 1.35pt + accent),
+            text(size: cfg.toc-part-size, weight: "semibold", fill: primary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-part-size, fill: accent)[#it.page()],
+          )
+        ]
+      },
+      chapter: it => {
+        block(above: 0.72em, below: 0.16em)[
+          #grid(
+            columns: (2.65em, 1fr, 2.35em),
+            gutter: 0.65em,
+            align: (right + horizon, left + horizon, right + horizon),
+            line(length: 100%, stroke: 1.35pt + accent),
+            text(size: cfg.toc-chapter-size, weight: "semibold", fill: primary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-chapter-size, fill: secondary)[#it.page()],
+          )
+          #v(0.28em)
+          #grid(
+            columns: (2.65em, 1fr),
+            gutter: 0.65em,
+            line(length: 100%, stroke: 1.35pt + accent),
+            line(length: 100%, stroke: 0.4pt + secondary.lighten(42%)),
+          )
+        ]
+      },
+      section: it => {
+        block(above: 0.18em, below: 0.1em)[
+          #grid(
+            columns: (2.65em, 1fr, 2.35em),
+            gutter: 0.65em,
+            align: (right + horizon, left + horizon, right + horizon),
+            [],
+            text(size: cfg.toc-section-size, fill: primary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-section-size, fill: secondary)[#it.page()],
+          )
+        ]
+      },
+      subsection: it => {
+        block(above: 0.08em, below: 0.1em)[
+          #grid(
+            columns: (2.65em, 1fr, 2.35em),
+            gutter: 0.65em,
+            align: (right + horizon, left + horizon, right + horizon),
+            [],
+            text(size: cfg.toc-subsection-size, fill: secondary)[
+              #h(cfg.toc-indent)#link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-subsection-size, fill: secondary)[#it.page()],
+          )
+        ]
+      },
+    )
+  },
+
+  // Anchor style — chapter groups hang from a shared rail and page marker
+  anchor: (cfg) => {
+    let primary = cfg.primary-color
+    let secondary = cfg.secondary-color
+    let accent = cfg.accent-color
+    (
+      title: (title, alignment) => {
+        heading-face(cfg)[
+          #block(
+            width: 100%,
+            below: 1.25em,
+            stroke: (left: 2pt + accent),
+            inset: (left: 0.95em, y: 0.22em),
+          )[
+            #align(alignment)[
+              #text(size: cfg.chapter-size + 4pt, weight: "medium", fill: primary)[#title]
+            ]
+          ]
+        ]
+      },
+      body: body => heading-face(cfg)[#body],
+      part: it => {
+        block(
+          above: 1.15em,
+          below: 0.48em,
+          stroke: (left: 2.4pt + accent),
+          fill: accent.lighten(94%),
+          inset: (left: 0.82em, right: 0.55em, y: 0.48em),
+        )[
+          #grid(
+            columns: (1fr, 2.35em),
+            gutter: 0.8em,
+            align: (left + horizon, center + horizon),
+            text(size: cfg.toc-part-size, weight: "semibold", fill: primary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-part-size, weight: "medium", fill: accent)[#it.page()],
+          )
+        ]
+      },
+      chapter: it => {
+        block(
+          above: 0.92em,
+          below: 0pt,
+          stroke: (left: 1.6pt + accent, bottom: 0.4pt + secondary.lighten(40%)),
+          inset: (left: 0.82em, right: 0.15em, top: 0.38em, bottom: 0.34em),
+        )[
+          #grid(
+            columns: (1fr, 2.35em),
+            gutter: 0.8em,
+            align: (left + horizon, center + horizon),
+            text(size: cfg.toc-chapter-size, weight: "semibold", fill: primary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            box(
+              width: 2.15em,
+              height: 2.15em,
+              radius: 999pt,
+              stroke: 0.7pt + accent,
+              align(center + horizon)[
+                #text(size: cfg.toc-section-size, weight: "medium", fill: accent)[#it.page()]
+              ],
+            ),
+          )
+        ]
+      },
+      section: it => {
+        block(
+          above: 0pt,
+          below: 0pt,
+          stroke: (left: 0.55pt + secondary.lighten(42%)),
+          inset: (left: cfg.toc-indent + 0.82em, right: 0.15em, y: 0.18em),
+        )[
+          #grid(
+            columns: (1fr, 2.35em),
+            gutter: 0.8em,
+            align: (left + horizon, center + horizon),
+            text(size: cfg.toc-section-size, fill: primary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-section-size, fill: secondary)[#it.page()],
+          )
+        ]
+      },
+      subsection: it => {
+        block(
+          above: 0pt,
+          below: 0pt,
+          stroke: (left: 0.55pt + secondary.lighten(42%)),
+          inset: (left: cfg.toc-indent * 2 + 0.82em, right: 0.15em, y: 0.12em),
+        )[
+          #grid(
+            columns: (1fr, 2.35em),
+            gutter: 0.8em,
+            align: (left + horizon, center + horizon),
+            text(size: cfg.toc-subsection-size, fill: secondary)[
+              #link(it.element.location())[#it.element.body]
+            ],
+            text(size: cfg.toc-subsection-size, fill: secondary)[#it.page()],
+          )
+        ]
+      },
+    )
+  },
+
   // Default/titled style
   titled: (cfg) => {
     let primary = cfg.primary-color
@@ -996,12 +1378,18 @@
     }
   }
 
-  (
+  let result = (
     part: part-renderer,
     chapter: renderer.chapter,
     section: renderer.section,
     subsection: renderer.subsection,
   )
+
+  // Newer TOC systems can coordinate the title and the outline typography.
+  // Older renderers deliberately keep the historical generic title treatment.
+  if "title" in renderer { result.title = renderer.title }
+  if "body" in renderer { result.body = renderer.body }
+  result
 }
 
 // Get TOC style renderer, fallback to titled style
@@ -1032,10 +1420,14 @@
 
   // Title (only if provided)
   if actual-title != none {
-    align(title-align)[
-      #text(size: cfg.chapter-size, weight: "bold", fill: primary)[#actual-title]
-    ]
-    v(1em)
+    if "title" in toc-renderer {
+      (toc-renderer.title)(actual-title, title-align)
+    } else {
+      align(title-align)[
+        #text(size: cfg.chapter-size, weight: "bold", fill: primary)[#actual-title]
+      ]
+      v(1em)
+    }
   }
 
   // Custom outline rendering based on style.
@@ -1046,11 +1438,11 @@
       if it.level == 1 {
         (toc-renderer.part)(it)
       } else if it.level == 2 {
-        block(inset: (left: cfg.toc-indent))[(toc-renderer.chapter)(it)]
+        block(inset: (left: cfg.toc-indent))[#(toc-renderer.chapter)(it)]
       } else if it.level == 3 {
-        block(inset: (left: cfg.toc-indent))[(toc-renderer.section)(it)]
+        block(inset: (left: cfg.toc-indent))[#(toc-renderer.section)(it)]
       } else if it.level == 4 {
-        block(inset: (left: cfg.toc-indent))[(toc-renderer.subsection)(it)]
+        block(inset: (left: cfg.toc-indent))[#(toc-renderer.subsection)(it)]
       } else {
         it
       }
@@ -1067,11 +1459,17 @@
     }
   }
 
-  outline(
+  let toc-body = outline(
     title: none,
     depth: depth,
     indent: auto,
   )
+
+  if "body" in toc-renderer {
+    (toc-renderer.body)(toc-body)
+  } else {
+    toc-body
+  }
 }
 
 // ============================================================================
