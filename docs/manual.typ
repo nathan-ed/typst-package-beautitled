@@ -176,6 +176,8 @@ All configuration is done through the `beautitled-setup` function. You can call 
   [`part-prefix`], [`"Partie"`], [Text before part number],
   [`chapter-prefix`], [`"Chapter"`], [Text before chapter number],
   [`section-prefix`], [`"Section"`], [Text before section number],
+  [`subsection-prefix`], [`"Sous-section"`], [Text before subsection number (used by `beautitled-ref`)],
+  [`subsubsection-prefix`], [`"Paragraphe"`], [Text before subsubsection number (used by `beautitled-ref`)],
 
   // Spacing
   [`part-above`], [`2em`], [Space above parts],
@@ -519,7 +521,10 @@ Pass a `label:` named argument to any heading function:
 #section(label: <sec-overview>)[Overview]
 ```
 
-Or with native headings when using `beautitled-init`:
+Or with native headings when using `beautitled-init`. The label goes where it
+would on any ordinary Typst heading, and the reference resolves through
+beautitled's own counters and numbering configuration — you never read
+`counter(heading)` yourself:
 
 ```typst
 #beautitled-setup(enable-parts: false)
@@ -528,6 +533,9 @@ Or with native headings when using `beautitled-init`:
 = Introduction <ch-intro>
 == Overview <sec-overview>
 ```
+
+Both forms are interchangeable: a native `== Overview <sec-overview>` and a
+direct `#section(label: <sec-overview>)[Overview]` produce the same reference.
 
 == Referencing
 
@@ -538,6 +546,22 @@ See #btl-ref(<ch-intro>)                  // short alias
 See #beautitled-ref(<ch-intro>, show-page: true)  // → "Chapitre 1 (p. 2)"
 See #beautitled-ref(<sec-overview>, short: true)  // → "1.1"
 ```
+
+== Numbering Depth
+
+A reference always prints exactly what its heading prints — same counters, same
+numbering pattern. Subsections therefore follow `subsection-numbering`: with the
+default `auto` they read `5.2`, and a pattern that includes the chapter gives the
+full hierarchical number:
+
+```typst
+#beautitled-setup(subsection-numbering: "1.1.1")
+// Subsection 2 of section 5 of chapter 1:
+#beautitled-ref(<sub>)             // → "Sous-section 1.5.2"
+#beautitled-ref(<sub>, short: true) // → "1.5.2"
+```
+
+The same holds for `section-numbering` and `subsubsection-numbering`.
 
 == Parameters
 
@@ -555,7 +579,7 @@ See #beautitled-ref(<sec-overview>, short: true)  // → "1.1"
 
 == Notes
 
-- The displayed prefix (`"Chapitre"`, `"Section"`, etc.) respects the active language preset.
+- The displayed prefix (`"Chapitre"`, `"Section"`, `"Sous-section"`, `"Paragraphe"`, etc.) respects the active language preset, and can be overridden per level with `part-prefix`, `chapter-prefix`, `section-prefix`, `subsection-prefix` and `subsubsection-prefix`.
 - When `show-part-number: false` (or the heading was called with `numbered: false`), the heading's title is shown instead of a number.
 - The reference is a clickable hyperlink to the heading's location in the document.
 

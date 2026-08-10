@@ -194,6 +194,8 @@
   part-prefix: "Partie",
   chapter-prefix: "Chapitre",
   section-prefix: "Section",
+  subsection-prefix: "Sous-section",
+  subsubsection-prefix: "Paragraphe",
 
   // Spacing
   part-above: 2em,
@@ -253,6 +255,8 @@
   part-prefix: none,
   chapter-prefix: none,
   section-prefix: none,
+  subsection-prefix: none,
+  subsubsection-prefix: none,
   part-above: none,
   part-below: none,
   chapter-above: none,
@@ -314,6 +318,8 @@
     if part-prefix != none { new.part-prefix = part-prefix }
     if chapter-prefix != none { new.chapter-prefix = chapter-prefix }
     if section-prefix != none { new.section-prefix = section-prefix }
+    if subsection-prefix != none { new.subsection-prefix = subsection-prefix }
+    if subsubsection-prefix != none { new.subsubsection-prefix = subsubsection-prefix }
     if part-above != none { new.part-above = part-above }
     if part-below != none { new.part-below = part-below }
     if chapter-above != none { new.chapter-above = chapter-above }
@@ -360,6 +366,76 @@
 
 // Protected dot separator for numbering (prevents decimal-comma regex from matching)
 #let _numsep = "\u{2060}.\u{2060}"
+
+// Render a heading number from its counter values. Single source of truth for
+// the heading itself, its outline entry and beautitled-ref, so a reference can
+// never print a different number than the title it points at. `nums` holds the
+// counter values for the level, outermost first.
+//
+// The explicit fallbacks reproduce the historical output verbatim (they use
+// _numsep rather than typography.typ's plain dot). A configured pattern —
+// subsection-numbering: "1.1.1" for a full "1.5.2" — takes precedence over them
+// on both paths, because both go through the same *-number helper.
+#let _heading-number(env-type, nums, cfg) = {
+  if env-type == "part" {
+    part-number(nums.at(0), cfg)
+  } else if env-type == "chapter" {
+    chapter-number(nums.at(0), cfg)
+  } else if env-type == "section" {
+    let (ch, sec) = nums
+    section-number(ch, sec, cfg,
+      fallback: if ch > 0 { [#str(ch)#_numsep#str(sec)] } else { [#str(sec)] })
+  } else if env-type == "subsection" {
+    let (ch, sec, sub) = nums
+    subsection-number(ch, sec, sub, cfg,
+      fallback: [#str(sec)#_numsep#str(sub)])
+  } else if env-type == "subsubsection" {
+    let (ch, sec, sub, subsub) = nums
+    subsubsection-number(ch, sec, sub, subsub, cfg,
+      fallback: [#str(sec)#_numsep#str(sub)#_numsep#str(subsub)])
+  } else {
+    none
+  }
+}
+
+// Reference marker emitted next to a labelled heading. Must be called inside
+// the heading's context block, after the counters have been stepped: the
+// marker's own location is what beautitled-ref reads the counters at.
+//
+// That indirection is what makes native headings work. `== Titre <sec-a>`
+// keeps its label on the original heading element, which the show rule places
+// *before* section-counter.step() — reading counters there yields numbers one
+// short. The marker sits after the step, so both entry points agree.
+//
+// from-init: true means the document already carries the label (it came from a
+// native heading); re-emitting it here would make it ambiguous and break
+// counter(page).at() and link(). The label is only a lookup key in that case.
+#let _ref-marker(label, env-type, show-num, title, from-init) = {
+  let meta = metadata((
+    kind: "_btl-ref-meta",
+    target-key: str(label),
+    env-type: env-type,
+    show-num: show-num,
+    title: title,
+  ))
+  if from-init { meta } else { [#meta #label] }
+}
+
+// Counter values for a level, read at the current position. Must be called
+// inside a context block, after the level's counters have been stepped.
+#let _heading-nums(env-type) = {
+  if env-type == "part" { (part-counter.get().first(),) }
+  else if env-type == "chapter" { (chapter-counter.get().first(),) }
+  else if env-type == "section" {
+    (chapter-counter.get().first(), section-counter.get().first())
+  } else if env-type == "subsection" {
+    (chapter-counter.get().first(), section-counter.get().first(),
+     subsection-counter.get().first())
+  } else {
+    (chapter-counter.get().first(), section-counter.get().first(),
+     subsection-counter.get().first(), subsubsection-counter.get().first())
+  }
+}
 
 /// Reset all counters to 0
 #let reset-counters() = {
@@ -478,7 +554,7 @@
 
     let meta-and-heading = {
       if label != none {
-        [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "part", show-num: show-num, title: title)) #label]
+        _ref-marker(label, "part", show-num, title, from-init)
       }
       place(hide[#heading(level: 1, outlined: true, bookmarked: true, outline-title) <_btl-internal>])
     }
@@ -570,7 +646,7 @@
     (style.chapter)(title, num, cfg, show-num)
 
     if label != none {
-      [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "chapter", show-num: show-num, title: title)) #label]
+      _ref-marker(label, "chapter", show-num, title, from-init)
     }
     v(cfg.chapter-below)
     _sync-heading-counter()
@@ -613,7 +689,7 @@
     v(cfg.section-above)
     (style.section)(title, ch-num, sec-num, cfg, show-num)
     if label != none {
-      [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "section", show-num: show-num, title: title)) #label]
+      _ref-marker(label, "section", show-num, title, from-init)
     }
     v(cfg.section-below)
     _sync-heading-counter()
@@ -654,7 +730,7 @@
     v(cfg.subsection-above)
     (style.subsection)(title, ch-num, sec-num, subsec-num, cfg, show-num)
     if label != none {
-      [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "subsection", show-num: show-num, title: title)) #label]
+      _ref-marker(label, "subsection", show-num, title, from-init)
     }
     v(cfg.subsection-below)
     _sync-heading-counter()
@@ -701,7 +777,7 @@
       ]
     }
     if label != none {
-      [#metadata((kind: "_btl-ref-meta", target-key: str(label), env-type: "subsubsection", show-num: show-num, title: title)) #label]
+      _ref-marker(label, "subsubsection", show-num, title, from-init)
     }
     v(cfg.subsection-below)
     _sync-heading-counter()
@@ -740,44 +816,40 @@
   if hits.len() == 0 {
     [??]
   } else {
-    let info = hits.first().value
+    let hit = hits.first()
+    let info = hit.value
     let env-type = info.env-type
     let show-num = info.show-num
+    // Counters are read at the marker, not at the label: a native heading
+    // carries its label before the counters are stepped (see _ref-marker).
+    let loc = hit.location()
 
+    let prefix-key = env-type + "-prefix"
     let num-text = if not show-num {
       info.title
-    } else if env-type == "part" {
-      let n = part-counter.at(target).first()
-      let num = part-number(n, cfg)
-      if short { num }
-      else { [#cfg.part-prefix #num] }
-    } else if env-type == "chapter" {
-      let n = chapter-counter.at(target).first()
-      let num = chapter-number(n, cfg)
-      if short { num }
-      else { [#cfg.chapter-prefix #num] }
-    } else if env-type == "section" {
-      let ch = chapter-counter.at(target).first()
-      let sec = section-counter.at(target).first()
-      let num = section-number(ch, sec, cfg, fallback: if ch > 0 { [#str(ch)#_numsep#str(sec)] } else { [#str(sec)] })
-      if short { num } else { [#cfg.section-prefix #num] }
-    } else if env-type == "subsection" {
-      let ch = chapter-counter.at(target).first()
-      let sec = section-counter.at(target).first()
-      let sub = subsection-counter.at(target).first()
-      subsection-number(ch, sec, sub, cfg, fallback: [#str(sec)#_numsep#str(sub)])
-    } else if env-type == "subsubsection" {
-      let ch = chapter-counter.at(target).first()
-      let sec = section-counter.at(target).first()
-      let sub = subsection-counter.at(target).first()
-      let subsub = subsubsection-counter.at(target).first()
-      subsubsection-number(ch, sec, sub, subsub, cfg, fallback: [#str(sec)#_numsep#str(sub)#_numsep#str(subsub)])
+    } else if env-type in ("part", "chapter", "section", "subsection", "subsubsection") {
+      let nums = if env-type == "part" {
+        (part-counter.at(loc).first(),)
+      } else if env-type == "chapter" {
+        (chapter-counter.at(loc).first(),)
+      } else if env-type == "section" {
+        (chapter-counter.at(loc).first(), section-counter.at(loc).first())
+      } else if env-type == "subsection" {
+        (chapter-counter.at(loc).first(), section-counter.at(loc).first(),
+         subsection-counter.at(loc).first())
+      } else {
+        (chapter-counter.at(loc).first(), section-counter.at(loc).first(),
+         subsection-counter.at(loc).first(), subsubsection-counter.at(loc).first())
+      }
+      let num = _heading-number(env-type, nums, cfg)
+      let prefix = cfg.at(prefix-key, default: none)
+      if short or prefix == none { num } else { [#prefix #num] }
     } else {
       [??]
     }
 
     let page-text = if show-page {
-      let pg = counter(page).at(target).first()
+      let pg = counter(page).at(loc).first()
       [ (#page-prefix#pg)]
     } else {
       []
@@ -1513,20 +1585,28 @@
   show heading.where(level: 1): it => {
     if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      // Forwarded so the heading function can emit its reference metadata.
+      // The label stays on this original element (from-init: true keeps the
+      // heading function from re-emitting it and making it ambiguous).
+      let lbl = if it.has("label") { it.label } else { none }
       counter(heading).update((..args) => {
         let v = args.pos()
         (calc.max(0, v.at(0) - 1), ..v.slice(1))
       })
       context {
         let cfg = beautitled-config.get()
-        if cfg.enable-parts { part(it.body, from-init: true) }
-        else { chapter(it.body, from-init: true) }
+        if cfg.enable-parts { part(it.body, label: lbl, from-init: true) }
+        else { chapter(it.body, label: lbl, from-init: true) }
       }
     }
   }
   show heading.where(level: 2): it => {
     if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      // Forwarded so the heading function can emit its reference metadata.
+      // The label stays on this original element (from-init: true keeps the
+      // heading function from re-emitting it and making it ambiguous).
+      let lbl = if it.has("label") { it.label } else { none }
       counter(heading).update((..args) => {
         let v = args.pos()
         if v.len() < 2 { return v }
@@ -1534,14 +1614,18 @@
       })
       context {
         let cfg = beautitled-config.get()
-        if cfg.enable-parts { chapter(it.body, from-init: true) }
-        else { section(it.body, from-init: true) }
+        if cfg.enable-parts { chapter(it.body, label: lbl, from-init: true) }
+        else { section(it.body, label: lbl, from-init: true) }
       }
     }
   }
   show heading.where(level: 3): it => {
     if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      // Forwarded so the heading function can emit its reference metadata.
+      // The label stays on this original element (from-init: true keeps the
+      // heading function from re-emitting it and making it ambiguous).
+      let lbl = if it.has("label") { it.label } else { none }
       counter(heading).update((..args) => {
         let v = args.pos()
         if v.len() < 3 { return v }
@@ -1549,14 +1633,18 @@
       })
       context {
         let cfg = beautitled-config.get()
-        if cfg.enable-parts { section(it.body, from-init: true) }
-        else { subsection(it.body, from-init: true) }
+        if cfg.enable-parts { section(it.body, label: lbl, from-init: true) }
+        else { subsection(it.body, label: lbl, from-init: true) }
       }
     }
   }
   show heading.where(level: 4): it => {
     if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      // Forwarded so the heading function can emit its reference metadata.
+      // The label stays on this original element (from-init: true keeps the
+      // heading function from re-emitting it and making it ambiguous).
+      let lbl = if it.has("label") { it.label } else { none }
       counter(heading).update((..args) => {
         let v = args.pos()
         if v.len() < 4 { return v }
@@ -1564,14 +1652,18 @@
       })
       context {
         let cfg = beautitled-config.get()
-        if cfg.enable-parts { subsection(it.body, from-init: true) }
-        else { subsubsection(it.body, from-init: true) }
+        if cfg.enable-parts { subsection(it.body, label: lbl, from-init: true) }
+        else { subsubsection(it.body, label: lbl, from-init: true) }
       }
     }
   }
   show heading.where(level: 5): it => {
     if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {
+      // Forwarded so the heading function can emit its reference metadata.
+      // The label stays on this original element (from-init: true keeps the
+      // heading function from re-emitting it and making it ambiguous).
+      let lbl = if it.has("label") { it.label } else { none }
       context {
         let cfg = beautitled-config.get()
         if cfg.enable-parts {
@@ -1580,7 +1672,7 @@
             if v.len() < 5 { return v }
             (v.at(0), v.at(1), v.at(2), v.at(3), calc.max(0, v.at(4) - 1), ..v.slice(5))
           })
-          subsubsection(it.body, from-init: true)
+          subsubsection(it.body, label: lbl, from-init: true)
         } else { it }
       }
     }
@@ -1599,6 +1691,8 @@
   part-prefix: "Partie",
   chapter-prefix: "Chapitre",
   section-prefix: "Section",
+  subsection-prefix: "Sous-section",
+  subsubsection-prefix: "Paragraphe",
 )
 
 /// English preset
@@ -1606,6 +1700,8 @@
   part-prefix: "Part",
   chapter-prefix: "Chapter",
   section-prefix: "Section",
+  subsection-prefix: "Subsection",
+  subsubsection-prefix: "Paragraph",
 )
 
 /// German academic preset
@@ -1613,6 +1709,8 @@
   part-prefix: "Teil",
   chapter-prefix: "Kapitel",
   section-prefix: "Abschnitt",
+  subsection-prefix: "Unterabschnitt",
+  subsubsection-prefix: "Absatz",
 )
 
 /// No numbering preset
