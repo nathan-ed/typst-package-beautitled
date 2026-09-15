@@ -48,3 +48,7 @@ CHK-customsec: #beautitled-ref(<psec2>)
 CHK-customdirect: #beautitled-ref(<pdirect>)
 
 CHK-partpage: #beautitled-ref(<pch1>, show-page: true)
+
+CHK-atpart: @p1
+
+CHK-atpsec: @psec2

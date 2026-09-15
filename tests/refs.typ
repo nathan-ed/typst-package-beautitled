@@ -71,3 +71,15 @@ CHK-nonum: #beautitled-ref(<nonum>)
 A missing label keeps the historical placeholder:
 
 CHK-missing: #beautitled-ref(<does-not-exist>)
+
+Native `@label` references go through beautitled-ref (issue #6):
+
+CHK-atsec: @s5
+
+CHK-atchap: @ch1
+
+CHK-atdirect: @direct-sec
+
+CHK-atsupp: @ss2[Sub.]
+
+CHK-suppnone: #beautitled-ref(<s5>, supplement: none)

@@ -545,7 +545,19 @@ See #beautitled-ref(<sec-overview>)       // → "Section 1.1"
 See #btl-ref(<ch-intro>)                  // short alias
 See #beautitled-ref(<ch-intro>, show-page: true)  // → "Chapitre 1 (p. 2)"
 See #beautitled-ref(<sec-overview>, short: true)  // → "1.1"
+See #beautitled-ref(<sec-overview>, supplement: [Sec.])  // → "Sec. 1.1"
 ```
+
+Under `beautitled-init`, Typst's own reference syntax works too and produces
+the same text:
+
+```typst
+See @sec-overview        // → "Section 1.1"
+See @sec-overview[Sec.]  // → "Sec. 1.1"
+```
+
+Documents that use only direct heading calls, without `beautitled-init`, can
+enable `@label` with `#show ref: beautitled-show-ref`.
 
 == Numbering Depth
 
@@ -575,6 +587,7 @@ The same holds for `section-numbering` and `subsubsection-numbering`.
   [`show-page`], [`bool`], [`false`], [Append a page number in parentheses],
   [`page-prefix`], [`str`], [`"p. "`], [Prefix before page number],
   [`short`], [`bool`], [`false`], [Omit prefix word; show number only (e.g. `1.1` instead of `Section 1.1`)],
+  [`supplement`], [`auto`, `none`, `content`], [`auto`], [Replaces the prefix word; `auto` keeps the configured prefix, `none` drops it],
 )
 
 == Notes

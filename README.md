@@ -17,7 +17,7 @@ Sleek, print-friendly heading styles for chapters, sections, parts, and tables o
 - **Page breaks** - Optional automatic page breaks before chapters
 - **Multilingual** - Customizable prefixes for any language
 - **Native Typst support** - Works with `= Heading` syntax
-- **Cross-references** - `beautitled-ref` for labelled heading refs with optional page numbers, on `= Heading <label>` and `#chapter(label: <label>)` alike
+- **Cross-references** - native `@label` and `beautitled-ref` for labelled heading refs with optional page numbers, on `= Heading <label>` and `#chapter(label: <label>)` alike
 
 ## Quick Start
 

@@ -799,11 +799,16 @@
 ///   show-page     - Include a page number (default: false)
 ///   page-prefix   - Prefix before page number (default: "p. ")
 ///   short         - Omit the prefix word, show number only (default: false)
+///   supplement    - Replaces the prefix word: auto keeps it, none drops it
+///                   (default: auto)
+///
+/// Under beautitled-init, plain `@label` references use this function too.
 #let beautitled-ref(
   target,
   show-page: false,
   page-prefix: "p. ",
   short: false,
+  supplement: auto,
 ) = context {
   let cfg = beautitled-config.get()
   let key = str(target)
@@ -842,8 +847,8 @@
          subsection-counter.at(loc).first(), subsubsection-counter.at(loc).first())
       }
       let num = _heading-number(env-type, nums, cfg)
-      let prefix = cfg.at(prefix-key, default: none)
-      if short or prefix == none { num } else { [#prefix #num] }
+      let prefix = if supplement == auto { cfg.at(prefix-key, default: none) } else { supplement }
+      if short or prefix in (none, []) { num } else { [#prefix #num] }
     } else {
       [??]
     }
@@ -860,6 +865,28 @@
 }
 
 #let btl-ref = beautitled-ref
+
+/// Show rule routing native `@label` references to beautitled headings through
+/// beautitled-ref. Applied by beautitled-init; documents that only use direct
+/// heading calls can enable it with `#show ref: beautitled-show-ref`.
+///
+/// Without it, `@label` fails: native headings carry no numbering (beautitled
+/// renders its own), and direct calls attach the label to a metadata marker.
+/// `@label[Sec.]` replaces the prefix word; page-form references and labels
+/// beautitled does not know are left to Typst.
+#let beautitled-show-ref(it) = {
+  if it.element == none or it.at("form", default: "normal") != "normal" { return it }
+  context {
+    let key = str(it.target)
+    let known = query(metadata).any(m => {
+      let v = m.value
+      type(v) == dictionary and v.at("kind", default: none) == "_btl-ref-meta" and v.at("target-key", default: none) == key
+    })
+    if known {
+      beautitled-ref(it.target, supplement: it.supplement)
+    } else { it }
+  }
+}
 
 // ============================================================================
 // Table of Contents / Outline
@@ -1582,6 +1609,7 @@
   // counter(heading) is a multi-level counter. Its update function receives the full
   // counter state as separate positional arguments (one per active level). We must only
   // decrement the component that matches the heading's level.
+  show ref: beautitled-show-ref
   show heading.where(level: 1): it => {
     if it.has("label") and str(it.label) == "_btl-internal" { [] }
     else {

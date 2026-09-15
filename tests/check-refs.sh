@@ -49,6 +49,12 @@ expect refs CHK-page       "Chapitre 1 (p. 1)"
 expect refs CHK-nonum      "Section sans numéro"
 # Missing label keeps the historical placeholder
 expect refs CHK-missing    "??"
+# Native @label references (issue #6)
+expect refs CHK-atsec      "Section 1.5"
+expect refs CHK-atchap     "Chapitre 1"
+expect refs CHK-atdirect   "Section 1.6"
+expect refs CHK-atsupp     "Sub. 1.5.2"
+expect refs CHK-suppnone   "1.5"
 
 # enable-parts: true, plus a custom section numbering pattern
 expect refs-parts CHK-part          "Partie I"
@@ -57,5 +63,7 @@ expect refs-parts CHK-partchap      "Chapitre 1"
 expect refs-parts CHK-customsec     "Section I-2"
 expect refs-parts CHK-customdirect  "Section I-3"
 expect refs-parts CHK-partpage      "Chapitre 1 (p. 1)"
+expect refs-parts CHK-atpart        "Partie I"
+expect refs-parts CHK-atpsec        "Section I-2"
 
 exit $fail
