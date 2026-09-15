@@ -1,6 +1,6 @@
 # beautitled
 
-[![beautitled on Typst Universe](https://img.shields.io/badge/Typst_Universe-v._0.3.0-239dad?labelColor=eee)](https://typst.app/universe/package/beautitled)
+[![beautitled on Typst Universe](https://img.shields.io/badge/Typst_Universe-v._0.3.1-239dad?labelColor=eee)](https://typst.app/universe/package/beautitled)
 [![Full package manual as PDF](https://img.shields.io/badge/Manual-pdf-333333?labelColor=eee)](https://github.com/nathan-ed/typst-package-beautitled/blob/7e64f98d858c8c31286a146969570de63288f137/docs/manual.pdf)
 [![Distributed under the MIT license](https://img.shields.io/badge/License-MIT-333333?labelColor=eee)](LICENSE)
 
@@ -22,7 +22,7 @@ Sleek, print-friendly heading styles for chapters, sections, parts, and tables o
 ## Quick Start
 
 ```typst
-#import "@preview/beautitled:0.3.0": *
+#import "@preview/beautitled:0.3.1": *
 
 #beautitled-setup(style: "anchor")
 #show: beautitled-init
@@ -361,6 +361,18 @@ and `anchor` visually binds every chapter to its sections.
 ```
 
 ## Changelog
+
+### [0.3.1] - 2026-09-15
+
+#### Added
+- Native `@label` references to beautitled headings under `beautitled-init`, with `@label[Sec.]` replacing the prefix word ([#6](https://github.com/nathan-ed/typst-package-beautitled/issues/6))
+- `beautitled-show-ref` show rule, for documents that use direct heading calls without `beautitled-init`
+- `supplement` parameter on `beautitled-ref`
+- `subsection-prefix` and `subsubsection-prefix` options for references
+
+#### Fixed
+- `beautitled-ref` on native `= Heading <label>` headings returned numbers one short; it now reads counters after they are stepped
+- References follow custom numbering patterns (e.g. `subsection-numbering: "1.1.1"`), exactly as the heading prints
 
 ### [0.3.0] - 2026-07-14
 

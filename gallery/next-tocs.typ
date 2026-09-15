@@ -1,6 +1,6 @@
 // Real-package TOC specimens for the three next-generation styles.
 // Compile with `--input style=folio`, `terrace`, or `anchor`.
-#import "@preview/beautitled:0.3.0": *
+#import "@preview/beautitled:0.3.1": *
 
 #let style-name = sys.inputs.at("style", default: "folio")
 #let heading-font = if style-name == "folio" { "Libertinus Serif" } else { "Linux Biolinum" }

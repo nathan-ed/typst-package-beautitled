@@ -1,5 +1,5 @@
 // Gallery renders for the next-generation heading collection.
-#import "@preview/beautitled:0.3.0": *
+#import "@preview/beautitled:0.3.1": *
 
 #set page(width: 16cm, height: 16cm, margin: 1.15cm)
 #set text(font: "Libertinus Serif", size: 10pt)

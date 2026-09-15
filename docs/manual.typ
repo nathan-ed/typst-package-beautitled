@@ -1,6 +1,6 @@
 // beautitled - User Manual
 // ============================================================================
-#import "@preview/beautitled:0.3.0": *
+#import "@preview/beautitled:0.3.1": *
 
 #set page(margin: 2.5cm)
 #set text(font: "Linux Libertine", size: 11pt)
@@ -18,7 +18,7 @@
   #v(0.5em)
   #text(size: 16pt, fill: gray)[User Manual]
   #v(0.3em)
-  #text(size: 11pt, fill: gray)[Version 0.3.0]
+  #text(size: 11pt, fill: gray)[Version 0.3.1]
   #v(0.5em)
   #text(size: 11pt)[Nathan Scheinmann]
 ]
@@ -52,13 +52,13 @@
 == Installation
 
 ```typst
-#import "@preview/beautitled:0.3.0": *
+#import "@preview/beautitled:0.3.1": *
 ```
 
 == Basic Usage
 
 ```typst
-#import "@preview/beautitled:0.3.0": *
+#import "@preview/beautitled:0.3.1": *
 
 #beautitled-setup(style: "anchor")
 #show: beautitled-init
@@ -625,7 +625,7 @@ beautitled includes several presets for common configurations. Presets are calle
 == Complete Example
 
 ```typst
-#import "@preview/beautitled:0.3.0": *
+#import "@preview/beautitled:0.3.1": *
 
 // 1. Choose a style
 #beautitled-setup(style: "scholarly")
@@ -749,7 +749,7 @@ The helper is exported from the package for cases where you want consistent
 colon spacing in your own content:
 
 ```typst
-#import "@preview/beautitled:0.3.0": colon-space
+#import "@preview/beautitled:0.3.1": colon-space
 
 Question#colon-space(): Why?
 ```
@@ -788,6 +788,12 @@ beautitled keeps the native `counter(heading)` synchronized with its internal co
 
 // ============================================================================
 = Changelog
+
+== Version 0.3.1
+- Native `@label` references to beautitled headings under `beautitled-init`; `@label[Sec.]` replaces the prefix word
+- New `beautitled-show-ref` show rule for direct heading calls without `beautitled-init`
+- New `supplement` parameter on `beautitled-ref`; new `subsection-prefix` and `subsubsection-prefix` options
+- Fixed `beautitled-ref` on native headings (numbers were one short) and with custom numbering patterns
 
 == Version 0.3.0
 - Added three next-generation styles: `folio`, `terrace`, and `anchor`
